@@ -4,6 +4,7 @@
  */
 
 import static java.lang.System.out;
+import java_cup.runtime.Symbol;
 
 %%
 
@@ -14,20 +15,31 @@ import static java.lang.System.out;
 %integer
 %line
 %column
+%cup
+
+%eofval{
+    return createSymbol(sym.EOF);
+%eofval}
 
 %{
-    // user custom code
+    private StringBuffer sb = new StringBuffer();
 
-    StringBuffer sb = new StringBuffer();
+    private Symbol createSymbol(int type) {
+        return new Symbol(type, yyline+1, yycolumn+1);
+    }
 
+    private Symbol createSymbol(int type, Object value) {
+        return new Symbol(type, yyline+1, yycolumn+1, value);
+    }
 %}
 
 LineTerminator = \r|\n|\r\n
-WhiteSpace     = {LineTerminator} | [ \t\f]
+WhiteSpace     = {LineTerminator} | [ \t\f] 
 Comment        = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 
 Identifier     = [:jletter:] [:jletterdigit:]*
 IntegerLiteral = 0 | [1-9][0-9]*
+
 Exponent       = [eE][\+\-]?[0-9]+
 Float1         = [0-9]+ \. [0-9]+ {Exponent}?
 Float2         = \. [0-9]+ {Exponent}?
@@ -41,7 +53,8 @@ FloatLiteral   = {Float1} | {Float2} | {Float3} | {Float4}
 
 <YYINITIAL> {
     /* reserved keywords */
-    "number"                       {out.println("NUMBER");}
+    "print"                        { return createSymbol(sym.PRINT); }
+	"number"                       {out.println("NUMBER");}
     "string"                       {out.println("STRING");}
     "while"                        {out.println("WHILE");}
     "if"                           {out.println("IF");}
@@ -56,18 +69,25 @@ FloatLiteral   = {Float1} | {Float2} | {Float3} | {Float4}
     "null"                         {out.println("NULL");}
     "this"                         {out.println("THIS");}
 
-    /* identifiers */
-    {Identifier}                   { out.println("id:" + yytext()); }
+    /* identifiers */ 
+    {Identifier}                   { return createSymbol(sym.IDENTIFIER, yytext()); }
 
-    /* literals */
-    {IntegerLiteral}               { out.println("integer:" + yytext()); }
-
-    /* Floats */
-    {FloatLiteral}                 {out.println("float:" + Double.parseDouble(yytext()));}
+    {IntegerLiteral}               { return createSymbol(sym.INTEGER_LITERAL, Integer.valueOf(yytext())); }
+    {FloatLiteral}                 { return createSymbol(sym.DOUBLE_LITERAL, Double.valueOf(yytext())); }
 
     \"                             { sb.setLength(0); yybegin(STRING); }
 
     /* operators */
+    "="                            { return createSymbol(sym.EQ); }
+    "+"                            { return createSymbol(sym.PLUS); }
+    "-"                            { return createSymbol(sym.MINUS); }
+    "*"                            { return createSymbol(sym.TIMES); }
+    "/"                            { return createSymbol(sym.DIVISION); }
+    "("                            { return createSymbol(sym.LPAREN); }
+    ")"                            { return createSymbol(sym.RPAREN); }
+    ";"                            { return createSymbol(sym.SEMICOLON); }
+	
+	/* operators */
       "="                            {out.println("ASSIGN");}
       "+"                            {out.println("PLUS");}
       "-"                            {out.println("MINUS");}
@@ -102,7 +122,7 @@ FloatLiteral   = {Float1} | {Float2} | {Float3} | {Float4}
 
 <STRING> {
     \"                             { yybegin(YYINITIAL);
-                                     out.println("string:" + sb.toString());
+                                     return createSymbol(sym.STRING_LITERAL, sb.toString());
                                    }
 
     [^\n\r\"\\]+                   { sb.append(yytext()); }

@@ -33,8 +33,9 @@ public class Compiler {
                     LOGGER.info("Scanning file " + args[i]);
                     java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
                     scanner = new Lexer(reader);
-                    while (scanner.yylex() != Lexer.YYEOF) {
-                    }
+                    parser p = new parser(scanner);
+                    Object result = p.parse().value;
+                    LOGGER.info("Compilation done");
                 } catch (java.io.FileNotFoundException e) {
                     LOGGER.error("File not found : \"" + args[i] + "\"");
                 } catch (java.io.IOException e) {

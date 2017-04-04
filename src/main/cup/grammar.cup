@@ -4,6 +4,8 @@
  */
 
 import java_cup.runtime.Symbol;
+import java.util.List;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,67 +60,132 @@ parser code
     }
 :};
 
-terminal java.lang.String IDENTIFIER;       // name
-terminal PRINT;
-terminal LPAREN, RPAREN, SEMICOLON;
-terminal ASSIGN;
-terminal TIMES, DIVISION;
+/*Terminals*/
+terminal java.lang.String IDENTIFIER;
+terminal THIS,NULL,NEW;
+terminal DO, WHILE;
+terminal LPAREN, RPAREN;
+terminal LBRACKET, RBRACKET;
+terminal EQ;
+terminal GREATER, GREATER_EQ, LESS, LESS_EQ;
+terminal EQUAL, NOT_EQUAL, NOT, ASSIGN;
+terminal TIMES, DIVISION, MOD;
 terminal PLUS, MINUS, UMINUS;
-terminal GREATERTHAN,LESSTHAN,GREATEREQUALTHAN,LESSEQUALTHAN;
-terminal EQUAL,NOTEQUAL;
-terminal LBRACKET,RBRACKET;
-terminal WHILE;
+terminal IF,ELSE;
+terminal DOT,COMMA, SEMICOLON;
+terminal AND, OR;
+terminal RETURN, BREAK, CONTINUE;
+terminal NUMBER, STRING, VOID, CLASS;
 
 terminal java.lang.Integer INTEGER_LITERAL;
 terminal java.lang.Double  DOUBLE_LITERAL;
 terminal java.lang.String  STRING_LITERAL;
 
+/*Non Terminals*/
 non terminal Expr;
 non terminal Stmt;
 non terminal StmtList;
 non terminal CompUnit;
-non terminal CompStmt;
+non terminal CompoundStmt;
+non terminal ExprList;
+non terminal ClassDefinition;
+non terminal FieldOrFunctionDefinition;
+non terminal FieldDefinition;
+non terminal FunctionDefinition;
+non terminal ParameterList;
+non terminal ParameterDeclaration;
+non terminal TypeSpecifier;
 
-precedence left EQUAL,NOTEQUAL;
-precedence left GREATERTHAN,LESSTHAN,GREATEREQUALTHAN,LESSEQUALTHAN;
+/*Precedence of operators*/
+precedence left OR;
+precedence left AND;
+precedence left EQUAL, NOT_EQUAL;
+precedence left LESS, LESS_EQ, GREATER, GREATER_EQ;
 precedence left PLUS, MINUS;
-precedence left TIMES, DIVISION;
-precedence right UMINUS;
+precedence left TIMES, DIVISION, MOD;
+precedence right UMINUS, NOT;
 
-start with CompUnit;
+/*Grammar*/
+start with CompilationUnit;
 
-CompUnit ::= 
+CompilationUnit ::= /* empty */
+           | ClassDefinition
+           | FunctionDefinition
            | StmtList
            ;
 
-StmtList ::= Stmt
-           | StmtList Stmt
-           ;              
+ClassDefinition ::= CLASS IDENTIFIER LBRACKET FieldOrFunctionDefinition RBRACKET
+                  ;
 
-CompStmt ::= LBRACKET RBRACKET
-           | LBRACKET StmtList RBRACKET
+FieldOrFunctionDefinition ::= FieldDefinition
+                            | FunctionDefinition
+                            ;
+
+FieldDefinition ::= TypeSpecifier IDENTIFIER SEMICOLON
+                 ;
+
+FunctionDefinition ::= TypeSpecifier IDENTIFIER LPAREN ParameterList RPAREN CompoundStmt
+                       ;
+
+ParameterList ::= ParameterDeclaration
+                  ;
+
+ParameterDeclaration ::= TypeSpecifier IDENTIFIER
+                         ;
+
+TypeSpecifier ::= NUMBER
+           | STRING
+           | VOID
+           | IDENTIFIER
            ;
 
-Stmt ::= PRINT LPAREN Expr RPAREN SEMICOLON
-       | IDENTIFIER ASSIGN Expr SEMICOLON
-       | WHILE LPAREN Expr RPAREN Stmt
-       | CompStmt
+CompoundStmt ::= LBRACKET Stmt RBRACKET
+           ;
+
+Stmt ::= WHILE LPAREN Expr RPAREN Stmt
+       | IF LPAREN Expr RPAREN Stmt
+       | IF LPAREN Expr RPAREN Stmt ELSE Stmt
+       | Expr ASSIGN Expr SEMICOLON
+       | Expr SEMICOLON
+       | RETURN Expr SEMICOLON
+       | BREAK SEMICOLON
+       | CONTINUE SEMICOLON
+       | CompoundStmt
+       | TypeSpecifier IDENTIFIER SEMICOLON
+       | IDENTIFIER EQ Expr SEMICOLON
+       | DO Stmt WHILE LPAREN Expr RPAREN SEMICOLON
+       | LBRACKET RBRACKET
        ;
 
 Expr ::= INTEGER_LITERAL
        | DOUBLE_LITERAL
        | STRING_LITERAL
+       | THIS
+       | NULL
        | IDENTIFIER
+       | IDENTIFIER LPAREN ExprList RPAREN
+       | NEW IDENTIFIER LPAREN ExprList RPAREN
+       | Expr DOT IDENTIFIER
+       | Expr DOT IDENTIFIER LPAREN ExprList RPAREN
        | LPAREN Expr RPAREN
        | Expr PLUS Expr
        | Expr MINUS Expr
        | Expr TIMES Expr
        | Expr DIVISION Expr
-       | Expr GREATERTHAN Expr
-       | Expr LESSTHAN Expr
-       | Expr GREATEREQUALTHAN Expr
-       | Expr LESSEQUALTHAN Expr
+       | Expr MOD Expr
        | Expr EQUAL Expr
-       | Expr NOTEQUAL Expr
-       | MINUS Expr %prec UMINUS
+       | Expr NOT_EQUAL Expr
+       | NOT Expr
+       | Expr LESS Expr
+       | Expr LESS_EQ Expr
+       | Expr GREATER Expr
+       | Expr GREATER_EQ Expr
+       | Expr AND Expr
+       | Expr OR Expr
+       | MINUS Expr
+         %prec UMINUS
+       ;
+
+ExprList ::= Expr
+       | ExprList COMMA Expr
        ;

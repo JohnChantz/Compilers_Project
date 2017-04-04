@@ -34,7 +34,7 @@ import java_cup.runtime.Symbol;
 %}
 
 LineTerminator = \r|\n|\r\n
-WhiteSpace     = {LineTerminator} | [ \t\f] 
+WhiteSpace     = {LineTerminator} | [ \t\f]
 Comment        = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 
 Identifier     = [:jletter:] [:jletterdigit:]*
@@ -53,10 +53,16 @@ FloatLiteral   = {Float1} | {Float2} | {Float3} | {Float4}
 
 <YYINITIAL> {
     /* reserved keywords */
-    "print"                        { return createSymbol(sym.PRINT); }
+    "number"                       { return createSymbol(sym.NUMBER);}
+    "string"                       { return createSymbol(sym.STRING);}
+    "void"                         { return createSymbol(sym.VOID);}
     "while"                        {return createSymbol(sym.WHILE);}
+    "if"                           {return createSymbol(sym.IF);}
+    "else"                         {return createSymbol(sym.ELSE);}
+    "do"                           { return createSymbol(sym.DO); }
+    "class"                        { return createSymbol(sym.CLASS);}
 
-    /* identifiers */ 
+    /* identifiers */
     {Identifier}                   { return createSymbol(sym.IDENTIFIER, yytext()); }
 
     {IntegerLiteral}               { return createSymbol(sym.INTEGER_LITERAL, Integer.valueOf(yytext())); }
@@ -73,14 +79,20 @@ FloatLiteral   = {Float1} | {Float2} | {Float3} | {Float4}
     "("                            { return createSymbol(sym.LPAREN); }
     ")"                            { return createSymbol(sym.RPAREN); }
     ";"                            { return createSymbol(sym.SEMICOLON); }
-    ">"                            { return createSymbol(sym.GREATERTHAN); }
-    "<"                            { return createSymbol(sym.LESSTHAN); }
-    ">="                           { return createSymbol(sym.GREATEREQUALTHAN); }
-    "<="                           { return createSymbol(sym.LESSEQUALTHAN); }
+    ">"                            { return createSymbol(sym.GREATER); }
+    "<"                            { return createSymbol(sym.LESS); }
+    ">="                           { return createSymbol(sym.GREATER_EQ); }
+    "<="                           { return createSymbol(sym.LESS_EQ); }
     "=="                           { return createSymbol(sym.EQUAL); }
-    "!="                           { return createSymbol(sym.NOTEQUAL); }
+    "!="                           { return createSymbol(sym.NOT_EQUAL); }
     "{"                            { return createSymbol(sym.LBRACKET); }
     "}"                            { return createSymbol(sym.RBRACKET); }
+    "||"                           { return createSymbol(sym.OR);}
+    "&&"                           { return createSymbol(sym.AND);}
+    "."                            { return createSymbol(sym.DOT);}
+    ","                            { return createSymbol(sym.COMMA);}
+    "!"                            { return createSymbol(sym.NOT);}
+    "%"                            { return createSymbol(sym.MOD);}
 
     /* comments */
     {Comment}                      { /* ignore */ }

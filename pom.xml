@@ -162,6 +162,8 @@
                 <configuration>
                     <mainClass>java_cup.Main</mainClass>
                     <arguments>
+                      <argument>-expect</argument>
+                      <argument>1</argument>
                         <argument>-destdir</argument>
                         <argument>${basedir}/src/main/java</argument>
                         <argument>${basedir}/src/main/cup/grammar.cup</argument>
@@ -204,16 +206,16 @@
                 </configuration>
             </plugin>
         </plugins>
-        
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        
+
         <pluginManagement>
             <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings 
+                <!--This plugin's configuration is used to store Eclipse m2e settings
                 only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>

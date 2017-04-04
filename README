@@ -7,7 +7,7 @@ http://www.dit.hua.gr/
 Compilation Instructions
 ------------------------
 
-1. Install maven 
+1. Install maven
 
 2. Compile using maven
 
@@ -17,10 +17,10 @@ mvn package
 
 java -jar target/compiler-0.0.2.jar input-filename
 
-or 
+or
 
 java -cp target/compiler-0.0.2.jar Compiler input-filename
 
 #Lexical Analysis -> DONE
-#Syntax Analysis -> working on 
-#Abstract Tree -> To do
+#Syntax Analysis -> working on
+#Abstract Syntax Tree -> To do

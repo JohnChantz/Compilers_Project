@@ -5,7 +5,7 @@ class Message{
    string text;
    Message next;
 
-   Message(){
+  void Message(){
      this.text = null;
      this.next = null;
    }
@@ -14,7 +14,7 @@ class Message{
 class MessageStore{
   Message first;
 
-  MessageStore(){
+  void MessageStore(){
     this.first = null;
   }
 
@@ -27,7 +27,8 @@ class MessageStore{
 void main(){
   MessageStore store;
   store = new MessageStore();
-  Message m = new Message();
+  Message m;
+  m = new Message();
   m.text = "Message_1\n";
   store.append(m);
   m = new Message();
@@ -37,9 +38,10 @@ void main(){
   m.text = "Message_3\n";
   store.append(m);
 
-  Message it = store.first;
+  Message it;
+  it = store.first;
   number i;
-  number = 0;
+  i = 0;
   while(it != null){
     write("Message " + i + " is: " + it.text);
     i=i+1;

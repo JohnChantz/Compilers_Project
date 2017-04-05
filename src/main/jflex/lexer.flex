@@ -61,6 +61,8 @@ FloatLiteral   = {Float1} | {Float2} | {Float3} | {Float4}
     "else"                         {return createSymbol(sym.ELSE);}
     "do"                           { return createSymbol(sym.DO); }
     "class"                        { return createSymbol(sym.CLASS);}
+    "new"                          { return createSymbol(sym.NEW);}
+    "return"                       { return createSymbol(sym.RETURN);}
 
     /* identifiers */
     {Identifier}                   { return createSymbol(sym.IDENTIFIER, yytext()); }

@@ -16,8 +16,9 @@ void main() {
   MathUtils mu;
   mu = new MathUtils();
 
-  number sum = mu.sum(100);
+  number sum;
+  sum = mu.sum(100);
   write("1+2+...+100=" + sum);
-
+  
   return;
 }

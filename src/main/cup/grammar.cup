@@ -61,12 +61,10 @@ parser code
 :};
 
 /*Terminals*/
-terminal java.lang.String IDENTIFIER;
 terminal THIS,NULL,NEW;
 terminal DO, WHILE;
 terminal LPAREN, RPAREN;
 terminal LBRACKET, RBRACKET;
-terminal EQ;
 terminal GREATER, GREATER_EQ, LESS, LESS_EQ;
 terminal EQUAL, NOT_EQUAL, NOT, ASSIGN;
 terminal TIMES, DIVISION, MOD;
@@ -80,18 +78,23 @@ terminal NUMBER, STRING, VOID, CLASS;
 terminal java.lang.Integer INTEGER_LITERAL;
 terminal java.lang.Double  DOUBLE_LITERAL;
 terminal java.lang.String  STRING_LITERAL;
+terminal java.lang.String IDENTIFIER;
+
 
 /*Non Terminals*/
 non terminal Expr;
 non terminal Stmt;
 non terminal StmtList;
-non terminal CompUnit;
+non terminal CompilationUnit;
 non terminal CompoundStmt;
 non terminal ExprList;
 non terminal ClassDefinition;
+non terminal ClassDefinitionList;
 non terminal FieldOrFunctionDefinition;
+non terminal FieldOrFunctionDefinitionList;
 non terminal FieldDefinition;
 non terminal FunctionDefinition;
+non terminal FunctionDefinitionList;
 non terminal ParameterList;
 non terminal ParameterDeclaration;
 non terminal TypeSpecifier;
@@ -103,44 +106,63 @@ precedence left EQUAL, NOT_EQUAL;
 precedence left LESS, LESS_EQ, GREATER, GREATER_EQ;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVISION, MOD;
+precedence right NEW;
 precedence right UMINUS, NOT;
+precedence left LPAREN, RPAREN, DOT;
 
 /*Grammar*/
 start with CompilationUnit;
 
-CompilationUnit ::= /* empty */
-           | ClassDefinition
-           | FunctionDefinition
-           | StmtList
-           ;
-
-ClassDefinition ::= CLASS IDENTIFIER LBRACKET FieldOrFunctionDefinition RBRACKET
+CompilationUnit ::= /*empty*/
+                  | ClassDefinitionList
+                  | FunctionDefinitionList
                   ;
+
+ClassDefinition ::= CLASS IDENTIFIER LBRACKET RBRACKET
+                  | CLASS IDENTIFIER LBRACKET FieldOrFunctionDefinitionList RBRACKET
+                  ;
+
+ClassDefinitionList ::= ClassDefinition
+                      | ClassDefinitionList ClassDefinition
+                      | ClassDefinitionList FunctionDefinition
+                      ;
 
 FieldOrFunctionDefinition ::= FieldDefinition
                             | FunctionDefinition
                             ;
 
+FieldOrFunctionDefinitionList ::= FieldOrFunctionDefinition
+                                | FieldOrFunctionDefinitionList FieldOrFunctionDefinition
+                                ;
+
 FieldDefinition ::= TypeSpecifier IDENTIFIER SEMICOLON
-                 ;
-
-FunctionDefinition ::= TypeSpecifier IDENTIFIER LPAREN ParameterList RPAREN CompoundStmt
-                       ;
-
-ParameterList ::= ParameterDeclaration
                   ;
 
-ParameterDeclaration ::= TypeSpecifier IDENTIFIER
+FunctionDefinition ::= TypeSpecifier IDENTIFIER LPAREN ParameterList RPAREN CompoundStmt
+                     ;
+
+FunctionDefinitionList ::= FunctionDefinition
+                         | FunctionDefinitionList FunctionDefinition
+                         | FunctionDefinitionList ClassDefinition
                          ;
 
-TypeSpecifier ::= NUMBER
-           | STRING
-           | VOID
-           | IDENTIFIER
-           ;
+ParameterList ::= /*empty*/
+                | ParameterDeclaration
+                | ParameterList COMMA ParameterDeclaration
+                ;
 
-CompoundStmt ::= LBRACKET Stmt RBRACKET
-           ;
+ParameterDeclaration ::= TypeSpecifier IDENTIFIER
+                       ;
+
+TypeSpecifier ::= NUMBER
+                | STRING
+                | VOID
+                | IDENTIFIER
+                ;
+
+CompoundStmt ::= LBRACKET RBRACKET
+               | LBRACKET StmtList RBRACKET
+               ;
 
 Stmt ::= WHILE LPAREN Expr RPAREN Stmt
        | IF LPAREN Expr RPAREN Stmt
@@ -152,12 +174,15 @@ Stmt ::= WHILE LPAREN Expr RPAREN Stmt
        | CONTINUE SEMICOLON
        | CompoundStmt
        | TypeSpecifier IDENTIFIER SEMICOLON
-       | IDENTIFIER EQ Expr SEMICOLON
-       | DO Stmt WHILE LPAREN Expr RPAREN SEMICOLON
-       | LBRACKET RBRACKET
+       | DO CompoundStmt WHILE LPAREN Expr RPAREN SEMICOLON
        ;
 
-Expr ::= INTEGER_LITERAL
+StmtList ::= Stmt
+           | StmtList Stmt
+           ;
+
+Expr ::= /*empty*/
+       | INTEGER_LITERAL
        | DOUBLE_LITERAL
        | STRING_LITERAL
        | THIS
@@ -182,10 +207,9 @@ Expr ::= INTEGER_LITERAL
        | Expr GREATER_EQ Expr
        | Expr AND Expr
        | Expr OR Expr
-       | MINUS Expr
-         %prec UMINUS
+       | MINUS Expr %prec UMINUS
        ;
 
 ExprList ::= Expr
-       | ExprList COMMA Expr
-       ;
+           | ExprList COMMA Expr
+          ;

@@ -4,7 +4,7 @@
   <groupId>org.hua</groupId>
   <artifactId>compiler</artifactId>
   <name>compiler</name>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <url>http://www.dit.hua.gr</url>
   <build>
     <resources>
@@ -198,6 +198,7 @@
     <junit.version>4.8.2</junit.version>
     <java.version>1.6</java.version>
     <org.slf4j.version>1.6.4</org.slf4j.version>
+    <commons-lang3.version>3.4</commons-lang3.version>
     <jflex.version>1.6.1</jflex.version>
     <java-cup.version>0.11a</java-cup.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,13 +1,10 @@
-/**
- *  This code is part of the lab exercises for the Compilers course
- *  at Harokopio University of Athens, Dept. of Informatics and Telematics.
- */
-
 import java_cup.runtime.Symbol;
 import java.util.List;
 import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ast.*;
 
 parser code
 {:
@@ -82,22 +79,22 @@ terminal java.lang.String IDENTIFIER;
 
 
 /*Non Terminals*/
-non terminal Expr;
-non terminal Stmt;
-non terminal StmtList;
-non terminal CompilationUnit;
-non terminal CompoundStmt;
-non terminal ExprList;
-non terminal ClassDefinition;
-non terminal ClassDefinitionList;
-non terminal FieldOrFunctionDefinition;
-non terminal FieldOrFunctionDefinitionList;
-non terminal FieldDefinition;
-non terminal FunctionDefinition;
-non terminal FunctionDefinitionList;
-non terminal ParameterList;
-non terminal ParameterDeclaration;
-non terminal TypeSpecifier;
+non terminal Expression Expr;
+non terminal Statement Stmt;
+non terminal StatementList StmtList;
+non terminal CompilationUnit CompilationUnit;
+non terminal CompoundStatement CompoundStmt;
+non terminal ExpressionList ExprList;
+non terminal ClassDefinition ClassDefinition;
+non terminal ClassDefinitionList ClassDefinitionList;
+non terminal FieldOrFunctionDefinition FieldOrFunctionDefinition;
+non terminal FieldOrFunctionDefinitionList FieldOrFunctionDefinitionList;
+non terminal FieldDefinition FieldDefinition;
+non terminal FunctionDefinition FunctionDefinition;
+non terminal FunctionDefinitionList FunctionDefinitionList;
+non terminal ParameterList ParameterList;
+non terminal ParameterDeclaration ParameterDeclaration;
+non terminal TypeSpecifier TypeSpecifier;
 
 /*Precedence of operators*/
 precedence left OR;
@@ -114,31 +111,89 @@ precedence left LPAREN, RPAREN, DOT;
 start with CompilationUnit;
 
 CompilationUnit ::= /*empty*/
-                  | ClassDefinitionList
-                  | FunctionDefinitionList
+                    {:
+                        RESULT = new CompilationUnit();
+                        RESULT.setLine(0);
+                        RESULT.setColumn(0);
+                    :}
+                 | ClassDefinitionList:cdl
+                    {:
+                        RESULT = new CompilationUnit(cdl);
+                        RESULT.setLine(cdlleft);
+                        RESULT.setColumn(cdlright);
+                    :}
+                 | FunctionDefinitionList:fdl
+                    {:
+                        RESULT = new CompilationUnit(fdl);
+                        RESULT.setLine(fdlleft);
+                        RESULT.setColumn(fdlright);
+                    :}
                   ;
 
-ClassDefinition ::= CLASS IDENTIFIER LBRACKET RBRACKET
-                  | CLASS IDENTIFIER LBRACKET FieldOrFunctionDefinitionList RBRACKET
+ClassDefinition ::= CLASS IDENTIFIER:i LBRACKET RBRACKET
+                    {:
+                        RESULT = new ClassDefinition(i);
+                        RESULT.setLine(ileft);
+                        RESULT.setColumn(iright);
+                    :}
+                  | CLASS IDENTIFIER:i LBRACKET FieldOrFunctionDefinitionList:fofdl RBRACKET
+                    {:
+                        RESULT = new ClassDefinition(i,fofdl);
+                        RESULT.setLine(ileft);
+                        RESULT.setColumn(iright);
+                    :}
                   ;
 
-ClassDefinitionList ::= ClassDefinition
-                      | ClassDefinitionList ClassDefinition
-                      | ClassDefinitionList FunctionDefinition
+ClassDefinitionList ::= ClassDefinition:c
+                        {:
+                            RESULT = new ClassDefinitionList();
+                            RESULT.addClassDefinition(c);
+                            RESULT.setLine(cleft);
+                            RESULT.setColumn(cright);
+                        :}
+                      | ClassDefinitionList ClassDefinition:c
+                        {:
+                            RESULT.addClassDefinition(c);
+                        :}
+                      | ClassDefinitionList FunctionDefinition:f
+                        {:
+                            RESULT.addFunctionDefinition(f);
+                        :}
                       ;
 
-FieldOrFunctionDefinition ::= FieldDefinition
-                            | FunctionDefinition
+FieldOrFunctionDefinition ::= FieldDefinition:fd
+                              {:
+                                RESULT = new FieldOrFunctionDefinition();
+                                RESULT.setFieldDef(fd);
+                                RESULT.setLine(fdleft);
+                                RESULT.setColumn(fdright);
+                              :}
+                            | FunctionDefinition:fd
+                              {:
+                                RESULT.setFunctionDef(fd);
+                                RESULT.setLine(fdleft);
+                                RESULT.setColumn(fdright);
+                              :}
                             ;
 
 FieldOrFunctionDefinitionList ::= FieldOrFunctionDefinition
                                 | FieldOrFunctionDefinitionList FieldOrFunctionDefinition
                                 ;
 
-FieldDefinition ::= TypeSpecifier IDENTIFIER SEMICOLON
+FieldDefinition ::= TypeSpecifier:ts IDENTIFIER:i SEMICOLON
+                    {:
+                        RESULT = new FieldDefinition(ts,i);
+                        RESULT.setLine(tsleft);
+                        RESULT.setColumn(tsright);
+                    :}
                   ;
 
-FunctionDefinition ::= TypeSpecifier IDENTIFIER LPAREN ParameterList RPAREN CompoundStmt
+FunctionDefinition ::= TypeSpecifier:t IDENTIFIER:i LPAREN ParameterList:pl RPAREN CompoundStmt:cs
+                       {:
+                            RESULT = new FunctionDefinition(t,i,pl,cs);
+                            RESULT.setLine(tleft);
+                            RESULT.setColumn(tright);
+                       :}
                      ;
 
 FunctionDefinitionList ::= FunctionDefinition
@@ -151,13 +206,38 @@ ParameterList ::= /*empty*/
                 | ParameterList COMMA ParameterDeclaration
                 ;
 
-ParameterDeclaration ::= TypeSpecifier IDENTIFIER
+ParameterDeclaration ::= TypeSpecifier:ts IDENTIFIER:i
+                         {:
+                            RESULT = new ParameterDeclaration(ts,i);
+                            RESULT.setLine(tsleft);
+                            RESULT.setColumn(tsright);
+                         :}
                        ;
 
-TypeSpecifier ::= NUMBER
-                | STRING
-                | VOID
-                | IDENTIFIER
+TypeSpecifier ::= NUMBER:n
+                  {:
+                    RESULT = new TypeSpecifier("number");
+                    RESULT.setLine(nleft);
+                    RESULT.setColumn(nright);
+                  :}
+                | STRING:s
+                  {:
+                    RESULT = new TypeSpecifier("string");
+                    RESULT.setLine(sleft);
+                    RESULT.setColumn(sright);
+                  :}
+                | VOID:v
+                  {:
+                    RESULT = new TypeSpecifier("void");
+                    RESULT.setLine(vleft);
+                    RESULT.setColumn(vright);
+                  :}
+                | IDENTIFIER:i
+                  {:
+                    RESULT = new TypeSpecifier(i);
+                    RESULT.setLine(ileft);
+                    RESULT.setColumn(iright);
+                  :}
                 ;
 
 CompoundStmt ::= LBRACKET RBRACKET

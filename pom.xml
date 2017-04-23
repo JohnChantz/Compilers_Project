@@ -4,7 +4,7 @@
 
     <groupId>org.hua</groupId>
     <artifactId>compiler</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
 
     <name>compiler</name>
@@ -20,6 +20,7 @@
         <args4j.version>2.0.16</args4j.version>
         <jflex.version>1.6.1</jflex.version>
         <java-cup.version>0.11a</java-cup.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
         <org.slf4j.version>1.6.4</org.slf4j.version>
         <logback.version>1.0.1</logback.version>
         <junit.version>4.8.2</junit.version>
@@ -71,6 +72,11 @@
             <version>${java-cup.version}</version>
             <type>jar</type>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -162,8 +168,8 @@
                 <configuration>
                     <mainClass>java_cup.Main</mainClass>
                     <arguments>
-                      <argument>-expect</argument>
-                      <argument>1</argument>
+                        <argument>-expect</argument>
+                        <argument>1</argument>
                         <argument>-destdir</argument>
                         <argument>${basedir}/src/main/java</argument>
                         <argument>${basedir}/src/main/cup/grammar.cup</argument>
@@ -206,16 +212,16 @@
                 </configuration>
             </plugin>
         </plugins>
-
+        
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-
+        
         <pluginManagement>
             <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings
+                <!--This plugin's configuration is used to store Eclipse m2e settings 
                 only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>

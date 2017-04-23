@@ -2,28 +2,28 @@ package ast;
 
 public class AssignmentStatement extends Statement {
 
-    private String identifier;
-    private Expression expression;
+    private Expression expression1;
+    private Expression expression2;
 
-    public AssignmentStatement(String identifier, Expression expression) {
-        this.identifier = identifier;
-        this.expression = expression;
+    public AssignmentStatement(Expression expression1, Expression expression2) {
+        this.expression1 = expression1;
+        this.expression2 = expression2;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public Expression getExpression1() {
+        return expression1;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setExpression1(Expression expression1) {
+        this.expression1 = expression1;
     }
 
-    public Expression getExpression() {
-        return expression;
+    public Expression getExpression2() {
+        return expression2;
     }
 
-    public void setExpression(Expression expression) {
-        this.expression = expression;
+    public void setExpression2(Expression expression2) {
+        this.expression2 = expression2;
     }
 
     @Override

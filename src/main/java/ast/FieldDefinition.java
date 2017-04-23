@@ -3,11 +3,11 @@ package ast;
 public class FieldDefinition extends ASTNode{
     
     private TypeSpecifier typeSpecifier;
-    private String identifier;
+    private IdentifierExpression identifier;
 
     public FieldDefinition(TypeSpecifier typeSpecifier, String identifier) {
         this.typeSpecifier = typeSpecifier;
-        this.identifier = identifier;
+        this.identifier = new IdentifierExpression(identifier);
     }
 
     public TypeSpecifier getTypeSpecifier() {
@@ -18,11 +18,11 @@ public class FieldDefinition extends ASTNode{
         this.typeSpecifier = typeSpecifier;
     }
 
-    public String getIdentifier() {
+    public IdentifierExpression getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierExpression identifier) {
         this.identifier = identifier;
     }
     

@@ -1,6 +1,10 @@
 
 package ast;
 
+import ast.ASTVisitor;
+import ast.ASTVisitorException;
+import ast.Expression;
+
 public class ParenthesisExpression extends Expression {
 
     private Expression expression;

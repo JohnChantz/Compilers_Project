@@ -11,7 +11,11 @@ public enum Operator {
     GREATER(">"),
     LESS("<"),
     EQUAL("=="),
-    NOT_EQUAL("!=");
+    NOT_EQUAL("!="),
+    MOD("%"),
+    NOT("!"),
+    AND("&&"),
+    OR("||");
 
     private String type;
 

@@ -1,6 +1,6 @@
 package ast;
 
-public class IfElseStatement extends Statement{
+public class IfElseStatement extends Statement {
     
     private Expression expression;
     private Statement statement1;

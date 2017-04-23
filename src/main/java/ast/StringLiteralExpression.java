@@ -1,5 +1,9 @@
 package ast;
 
+import ast.ASTVisitor;
+import ast.ASTVisitorException;
+import ast.Expression;
+
 public class StringLiteralExpression extends Expression {
 
     private String literal;

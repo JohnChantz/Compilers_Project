@@ -5,13 +5,13 @@ import java.util.List;
 
 public class CompoundStatement extends Statement {
 
-    private List<Statement> statements;
+    private ArrayList<Statement> statements;
 
     public CompoundStatement() {
         this.statements = new ArrayList<Statement>();
     }
 
-    public CompoundStatement(List<Statement> statements) {
+    public CompoundStatement(ArrayList<Statement> statements) {
         this.statements = statements;
     }
 
@@ -19,7 +19,7 @@ public class CompoundStatement extends Statement {
         return statements;
     }
 
-    public void setStatements(List<Statement> statements) {
+    public void setStatements(ArrayList<Statement> statements) {
         this.statements = statements;
     }
 

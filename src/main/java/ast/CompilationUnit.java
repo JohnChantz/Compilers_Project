@@ -1,36 +1,34 @@
 package ast;
 
+import java.util.ArrayList;
+
 public class CompilationUnit extends ASTNode {
 
-    private ClassDefinitionList classDefinitions = null;
-    private FunctionDefinitionList functionDefinitions = null;
+    private ArrayList<ClassDefinition> classDefinitions = null;
+    private ArrayList<FunctionDefinition> functionDefinitions = null;
 
     public CompilationUnit() {
-        classDefinitions = new ClassDefinitionList();
-        functionDefinitions = new FunctionDefinitionList();
+        classDefinitions = new ArrayList<ClassDefinition>();
+        functionDefinitions = new ArrayList<FunctionDefinition>();
     }
 
-    public CompilationUnit(ClassDefinitionList classDefinitions) {
+    public CompilationUnit(ArrayList classDefinitions) {
         this.classDefinitions = classDefinitions;
     }
 
-    public CompilationUnit(FunctionDefinitionList functionDefinitions) {
-        this.functionDefinitions = functionDefinitions;
-    }
-
-    public ClassDefinitionList getClassDefinitions() {
+    public ArrayList<ClassDefinition> getClassDefinitions() {
         return classDefinitions;
     }
 
-    public FunctionDefinitionList getFunctionDefinitions() {
+    public ArrayList<FunctionDefinition> getFunctionDefinitions() {
         return functionDefinitions;
     }
 
-    public void setFunctionDefinitions(FunctionDefinitionList functionDefinitions) {
+    public void setFunctionDefinitions(ArrayList functionDefinitions) {
         this.functionDefinitions = functionDefinitions;
     }
 
-    public void setClassDefinitions(ClassDefinitionList classDefinitions) {
+    public void setClassDefinitions(ArrayList classDefinitions) {
         this.classDefinitions = classDefinitions;
     }
 

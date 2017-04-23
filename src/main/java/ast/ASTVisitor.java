@@ -4,7 +4,7 @@ package ast;
  * Abstract syntax tree visitor.
  */
 public interface ASTVisitor {
-    
+
     void visit(CompilationUnit node) throws ASTVisitorException;
 
     void visit(AssignmentStatement node) throws ASTVisitorException;
@@ -24,35 +24,32 @@ public interface ASTVisitor {
     void visit(StringLiteralExpression node) throws ASTVisitorException;
 
     void visit(ParenthesisExpression node) throws ASTVisitorException;
-    
+
     void visit(WhileStatement node) throws ASTVisitorException;
-    
-   void visit(DoWhileStatement node) throws ASTVisitorException;
-   
-   void visit(IfStatement node) throws ASTVisitorException;
 
-   void visit(IfElseStatement node) throws ASTVisitorException;
+    void visit(DoWhileStmt node) throws ASTVisitorException;
 
-   void visit(ExpressionList node) throws ASTVisitorException;
+    void visit(IfStatement node) throws ASTVisitorException;
 
-   void visit(ContinueStmt node) throws ASTVisitorException;
+    void visit(IfElseStatement node) throws ASTVisitorException;
 
-   void visit(BreakStmt node) throws ASTVisitorException;
+    void visit(ContinueStmt node) throws ASTVisitorException;
 
-   void visit(ReturnStmt node) throws ASTVisitorException;
+    void visit(BreakStmt node) throws ASTVisitorException;
 
-   void visit(TypeSpecifierStmt node) throws ASTVisitorException;
+    void visit(ReturnStmt node) throws ASTVisitorException;
 
-   void visit(TypeSpecifier node) throws ASTVisitorException;
+    void visit(TypeSpecifierStmt node) throws ASTVisitorException;
 
-   void visit(FunctionDefinition node) throws ASTVisitorException;
+    void visit(TypeSpecifier node) throws ASTVisitorException;
 
-   void visit(FieldOrFunctionDefinition node) throws ASTVisitorException;
+    void visit(FunctionDefinition node) throws ASTVisitorException;
 
-   void visit(FieldOrFunctionDefinitionList node) throws ASTVisitorException;
+    void visit(FieldOrFunctionDefinition node) throws ASTVisitorException;
 
-   void visit(FieldDefinition node) throws ASTVisitorException;
+    void visit(FieldDefinition node) throws ASTVisitorException;
 
-   void visit(ClassDefinition node) throws ASTVisitorException;
+    void visit(ClassDefinition node) throws ASTVisitorException;
 
+    void visit(PlainStmt node) throws  ASTVisitorException;
 }

@@ -1,39 +1,41 @@
 package ast;
 
+import java.util.ArrayList;
+
 public class ClassDefinition extends ASTNode{
 
-    private String identifier = null;
-    private FieldOrFunctionDefinitionList fieldOrFunctionDefinitions = null;
+    private IdentifierExpression identifier = null;
+    private ArrayList<FieldOrFunctionDefinition> definitions = null;
     
     public ClassDefinition(){
         
     }
     
     public ClassDefinition(String identifier){
-        this.identifier = identifier;
+        this.identifier = new IdentifierExpression(identifier);
     }
 
-    public ClassDefinition(String identifier,FieldOrFunctionDefinitionList fieldOrFunctionDefinitions) {
-        this.identifier = identifier;
-        this.fieldOrFunctionDefinitions = fieldOrFunctionDefinitions;
+    public ClassDefinition(String identifier,ArrayList fieldOrFunctionDefinitions) {
+        this.identifier = new IdentifierExpression(identifier);
+        this.definitions = fieldOrFunctionDefinitions;
     }
 
-    public String getIdentifier() {
+    public IdentifierExpression getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierExpression identifier) {
         this.identifier = identifier;
     }
 
    
 
-    public FieldOrFunctionDefinitionList getFieldOrFunctionDefinitions() {
-        return fieldOrFunctionDefinitions;
+    public ArrayList<FieldOrFunctionDefinition> getFieldOrFunctionDefinitions() {
+        return definitions;
     }
 
-    public void setFieldOrFunctionDefinitions(FieldOrFunctionDefinitionList fieldOrFunctionDefinitions) {
-        this.fieldOrFunctionDefinitions = fieldOrFunctionDefinitions;
+    public void setFieldOrFunctionDefinitions(ArrayList fieldOrFunctionDefinitions) {
+        this.definitions = fieldOrFunctionDefinitions;
     }
     
     @Override

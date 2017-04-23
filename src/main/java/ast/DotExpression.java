@@ -1,15 +1,22 @@
 package ast;
 
-import ast.ASTVisitor;
-import ast.ASTVisitorException;
-import ast.Expression;
 
-public class IdentifierExpression extends Expression {
+public class DotExpression extends Expression{
 
+    private Expression exp;
     private String identifier;
 
-    public IdentifierExpression(String identifier) {
+    public DotExpression(Expression exp, String identifier) {
+        this.exp = exp;
         this.identifier = identifier;
+    }
+
+    public Expression getExp() {
+        return exp;
+    }
+
+    public void setExp(Expression exp) {
+        this.exp = exp;
     }
 
     public String getIdentifier() {
@@ -22,7 +29,6 @@ public class IdentifierExpression extends Expression {
 
     @Override
     public void accept(ASTVisitor visitor) throws ASTVisitorException {
-        visitor.visit(this);
-    }
 
+    }
 }

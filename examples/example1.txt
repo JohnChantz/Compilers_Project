@@ -1,4 +1,4 @@
-
+/*Sample Program 1*/
 void main(){
   number i;
   i=0;

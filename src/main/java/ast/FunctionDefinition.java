@@ -1,17 +1,19 @@
 package ast;
 
+import java.util.ArrayList;
+
 public class FunctionDefinition extends ASTNode{
 
     private TypeSpecifier typeSpecifier;
-    private String identifier;
-    private ParameterList parameterList;
+    private IdentifierExpression identifier;
+    private ArrayList<ParameterDeclaration> parameterList;
     private CompoundStatement compoundStatement;
 
     
     
-    public FunctionDefinition(TypeSpecifier typeSpecifier,String identifier,ParameterList parameterList,CompoundStatement compStmt) {
+    public FunctionDefinition(TypeSpecifier typeSpecifier,String identifier,ArrayList parameterList,CompoundStatement compStmt) {
         this.typeSpecifier = typeSpecifier;
-        this.identifier = identifier;
+        this.identifier = new IdentifierExpression(identifier);
         this.parameterList = parameterList;
         this.compoundStatement = compStmt;
     }
@@ -24,19 +26,19 @@ public class FunctionDefinition extends ASTNode{
         this.typeSpecifier = typeSpecifier;
     }
 
-    public String getIdentifier() {
+    public IdentifierExpression getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierExpression identifier) {
         this.identifier = identifier;
     }
 
-    public ParameterList getParameterList() {
+    public ArrayList<ParameterDeclaration> getParameterList() {
         return parameterList;
     }
 
-    public void setParameterList(ParameterList parameterList) {
+    public void setParameterList(ArrayList parameterList) {
         this.parameterList = parameterList;
     }
 

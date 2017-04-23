@@ -1,5 +1,10 @@
 package ast;
 
+import ast.ASTVisitor;
+import ast.ASTVisitorException;
+import ast.Operator;
+import ast.Expression;
+
 public class UnaryExpression extends Expression {
 
     private Operator operator;

@@ -1,13 +1,13 @@
 package ast;
 
-public class IfStatement extends Statement {
+public class DoWhileStmt extends Statement {
     
     private Expression expression;
-    private Statement statement;
+    private CompoundStatement compoundStatement;
 
-    public IfStatement(Expression expression, Statement statement) {
+    public DoWhileStmt(Expression expression, CompoundStatement statement) {
         this.expression = expression;
-        this.statement = statement;
+        this.compoundStatement = statement;
     }
 
     public Expression getExpression() {
@@ -19,13 +19,13 @@ public class IfStatement extends Statement {
     }
 
     public Statement getStatement() {
-        return statement;
+        return compoundStatement;
     }
 
-    public void setStatement(Statement statement) {
-        this.statement = statement;
+    public void setStatement(CompoundStatement statement) {
+        this.compoundStatement = statement;
     }
-
+    
     @Override
     public void accept(ASTVisitor visitor) throws ASTVisitorException {
         visitor.visit(this);

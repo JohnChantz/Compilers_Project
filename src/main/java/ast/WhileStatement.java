@@ -1,6 +1,11 @@
 package ast;
 
-public class WhileStatement extends Statement{
+import ast.ASTVisitor;
+import ast.ASTVisitorException;
+import ast.Expression;
+import ast.Statement;
+
+public class WhileStatement extends Statement {
     
     private Expression expression;
     private Statement statement;

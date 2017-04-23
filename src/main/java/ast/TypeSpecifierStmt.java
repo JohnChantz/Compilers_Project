@@ -1,14 +1,18 @@
 package ast;
 
-public class TypeSpecifierStmt extends Statement{
+import ast.ASTVisitor;
+import ast.ASTVisitorException;
+import ast.Statement;
+import ast.TypeSpecifier;
+
+public class TypeSpecifierStmt extends Statement {
 
     private TypeSpecifier typeSpecifier;
-    private String identifier;
-    private String symbol = ";";
-    
-    public TypeSpecifierStmt(TypeSpecifier typeSpecifier,String identifier){
+    private IdentifierExpression identifier;
+
+    public TypeSpecifierStmt(TypeSpecifier typeSpecifier, String identifier) {
         this.typeSpecifier = typeSpecifier;
-        this.identifier = identifier;
+        this.identifier = new IdentifierExpression(identifier);
     }
 
     public TypeSpecifier getTypeSpecifier() {
@@ -19,25 +23,17 @@ public class TypeSpecifierStmt extends Statement{
         this.typeSpecifier = typeSpecifier;
     }
 
-    public String getIdentifier() {
+    public IdentifierExpression getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierExpression identifier) {
         this.identifier = identifier;
     }
 
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-    
     @Override
     public void accept(ASTVisitor visitor) throws ASTVisitorException {
         visitor.visit(this);
     }
-    
+
 }

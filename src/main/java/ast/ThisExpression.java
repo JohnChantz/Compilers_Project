@@ -1,13 +1,12 @@
 package ast;
 
-public class BreakStmt extends Statement {
+public class ThisExpression extends Expression {
 
-    public BreakStmt(){
+    public ThisExpression() {
     }
 
     @Override
     public void accept(ASTVisitor visitor) throws ASTVisitorException {
-        visitor.visit(this);
+
     }
-    
 }

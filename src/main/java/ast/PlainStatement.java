@@ -1,10 +1,10 @@
 package ast;
 
-public class PlainStmt extends Statement {
+public class PlainStatement extends Statement {
 
     private Expression exp;
 
-    public PlainStmt(Expression exp) {
+    public PlainStatement(Expression exp) {
         this.exp = exp;
     }
 

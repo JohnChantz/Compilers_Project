@@ -27,19 +27,17 @@ public interface ASTVisitor {
 
     void visit(WhileStatement node) throws ASTVisitorException;
 
-    void visit(DoWhileStmt node) throws ASTVisitorException;
-
     void visit(IfStatement node) throws ASTVisitorException;
 
     void visit(IfElseStatement node) throws ASTVisitorException;
 
-    void visit(ContinueStmt node) throws ASTVisitorException;
+    void visit(ContinueStatement node) throws ASTVisitorException;
 
     void visit(BreakStmt node) throws ASTVisitorException;
 
-    void visit(ReturnStmt node) throws ASTVisitorException;
+    void visit(ReturnStatement node) throws ASTVisitorException;
 
-    void visit(TypeSpecifierStmt node) throws ASTVisitorException;
+    void visit(TypeSpecifierStatement node) throws ASTVisitorException;
 
     void visit(TypeSpecifier node) throws ASTVisitorException;
 
@@ -51,5 +49,7 @@ public interface ASTVisitor {
 
     void visit(ClassDefinition node) throws ASTVisitorException;
 
-    void visit(PlainStmt node) throws  ASTVisitorException;
+    void visit(PlainStatement node) throws  ASTVisitorException;
+
+    void visit(DoWhileStatement node) throws ASTVisitorException;
 }

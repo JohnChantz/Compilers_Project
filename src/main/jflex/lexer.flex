@@ -63,6 +63,8 @@ FloatLiteral   = {Float1} | {Float2} | {Float3} | {Float4}
     "class"                        { return createSymbol(sym.CLASS);}
     "new"                          { return createSymbol(sym.NEW);}
     "return"                       { return createSymbol(sym.RETURN);}
+    "break"                        { return createSymbol(sym.BREAK);}
+    "continue"                     { return createSymbol(sym.CONTINUE);}
 
     /* identifiers */
     {Identifier}                   { return createSymbol(sym.IDENTIFIER, yytext()); }

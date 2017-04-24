@@ -1,8 +1,8 @@
 package ast;
 
-public class ContinueStmt extends Statement {
+public class ContinueStatement extends Statement {
 
-    public ContinueStmt() {
+    public ContinueStatement() {
     }
 
     @Override

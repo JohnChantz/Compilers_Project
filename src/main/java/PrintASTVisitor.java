@@ -74,15 +74,6 @@ public class PrintASTVisitor implements ASTVisitor {
     }
 
     @Override
-    public void visit(DoWhileStmt node) throws ASTVisitorException {
-        System.out.print("do");
-        node.getStatement().accept(this);
-        System.out.print("while(");
-        node.getExpression().accept(this);
-        System.out.println(")");
-    }
-
-    @Override
     public void visit(IfStatement node) throws ASTVisitorException {
         System.out.print("if(");
         node.getExpression().accept(this);
@@ -102,16 +93,13 @@ public class PrintASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(CompilationUnit node) throws ASTVisitorException {
-        for (ClassDefinition classDef : node.getClassDefinitions()) {
-            classDef.accept(this);
-        }
-        for (FunctionDefinition fooDef : node.getFunctionDefinitions()) {
-            fooDef.accept(this);
+        for(Definition def : node.getDefinitions()){
+            def.accept(this);
         }
     }
 
     @Override
-    public void visit(ContinueStmt node) throws ASTVisitorException {
+    public void visit(ContinueStatement node) throws ASTVisitorException {
         System.out.println("continue;");
     }
 
@@ -121,14 +109,14 @@ public class PrintASTVisitor implements ASTVisitor {
     }
 
     @Override
-    public void visit(ReturnStmt node) throws ASTVisitorException {
+    public void visit(ReturnStatement node) throws ASTVisitorException {
         System.out.print("return ");
         node.getExpr().accept(this);
         System.out.print(";");
     }
 
     @Override
-    public void visit(TypeSpecifierStmt node) throws ASTVisitorException {
+    public void visit(TypeSpecifierStatement node) throws ASTVisitorException {
         node.getTypeSpecifier().accept(this);
         node.getIdentifier().accept(this);
         System.out.print(";");
@@ -154,7 +142,10 @@ public class PrintASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(FieldOrFunctionDefinition node) throws ASTVisitorException {
-
+        if(node.getFieldDef() == null)
+            node.getFunctionDef().accept(this);
+        if(node.getFunctionDef() == null)
+            node.getFieldDef().accept(this);
     }
 
     @Override
@@ -175,9 +166,18 @@ public class PrintASTVisitor implements ASTVisitor {
     }
 
     @Override
-    public void visit(PlainStmt node) throws ASTVisitorException {
+    public void visit(PlainStatement node) throws ASTVisitorException {
         node.getExp().accept(this);
         System.out.print(";");
+    }
+
+    @Override
+    public void visit(DoWhileStatement node) throws ASTVisitorException {
+        System.out.print("do");
+        node.getStatement().accept(this);
+        System.out.print("while(");
+        node.getExpression().accept(this);
+        System.out.println(")");
     }
 
 }

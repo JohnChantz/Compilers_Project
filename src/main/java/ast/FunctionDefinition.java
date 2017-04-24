@@ -2,7 +2,7 @@ package ast;
 
 import java.util.ArrayList;
 
-public class FunctionDefinition extends ASTNode{
+public class FunctionDefinition extends Definition{
 
     private TypeSpecifier typeSpecifier;
     private IdentifierExpression identifier;
@@ -11,7 +11,7 @@ public class FunctionDefinition extends ASTNode{
 
     
     
-    public FunctionDefinition(TypeSpecifier typeSpecifier,String identifier,ArrayList parameterList,CompoundStatement compStmt) {
+    public FunctionDefinition(TypeSpecifier typeSpecifier,String identifier,ArrayList<ParameterDeclaration> parameterList,CompoundStatement compStmt) {
         this.typeSpecifier = typeSpecifier;
         this.identifier = new IdentifierExpression(identifier);
         this.parameterList = parameterList;
@@ -38,7 +38,7 @@ public class FunctionDefinition extends ASTNode{
         return parameterList;
     }
 
-    public void setParameterList(ArrayList parameterList) {
+    public void setParameterList(ArrayList<ParameterDeclaration> parameterList) {
         this.parameterList = parameterList;
     }
 

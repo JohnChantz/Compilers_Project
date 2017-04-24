@@ -1,6 +1,6 @@
 package ast;
 
-public class FieldOrFunctionDefinition extends ASTNode{
+public class FieldOrFunctionDefinition extends Definition{
 
     private FieldDefinition fieldDef;
     private FunctionDefinition functionDef;

@@ -5,12 +5,12 @@ import ast.ASTVisitorException;
 import ast.Statement;
 import ast.TypeSpecifier;
 
-public class TypeSpecifierStmt extends Statement {
+public class TypeSpecifierStatement extends Statement {
 
     private TypeSpecifier typeSpecifier;
     private IdentifierExpression identifier;
 
-    public TypeSpecifierStmt(TypeSpecifier typeSpecifier, String identifier) {
+    public TypeSpecifierStatement(TypeSpecifier typeSpecifier, String identifier) {
         this.typeSpecifier = typeSpecifier;
         this.identifier = new IdentifierExpression(identifier);
     }

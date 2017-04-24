@@ -2,7 +2,7 @@ package ast;
 
 import java.util.ArrayList;
 
-public class ClassDefinition extends ASTNode{
+public class ClassDefinition extends Definition{
 
     private IdentifierExpression identifier = null;
     private ArrayList<FieldOrFunctionDefinition> definitions = null;
@@ -15,7 +15,7 @@ public class ClassDefinition extends ASTNode{
         this.identifier = new IdentifierExpression(identifier);
     }
 
-    public ClassDefinition(String identifier,ArrayList fieldOrFunctionDefinitions) {
+    public ClassDefinition(String identifier,ArrayList<FieldOrFunctionDefinition> fieldOrFunctionDefinitions) {
         this.identifier = new IdentifierExpression(identifier);
         this.definitions = fieldOrFunctionDefinitions;
     }
@@ -34,7 +34,7 @@ public class ClassDefinition extends ASTNode{
         return definitions;
     }
 
-    public void setFieldOrFunctionDefinitions(ArrayList fieldOrFunctionDefinitions) {
+    public void setFieldOrFunctionDefinitions(ArrayList<FieldOrFunctionDefinition> fieldOrFunctionDefinitions) {
         this.definitions = fieldOrFunctionDefinitions;
     }
     

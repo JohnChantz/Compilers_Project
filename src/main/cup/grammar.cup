@@ -95,6 +95,8 @@ non terminal ArrayList<FunctionDefinition> FunctionDefinitionList;
 non terminal ArrayList<ParameterDeclaration> ParameterList;
 non terminal ParameterDeclaration ParameterDeclaration;
 non terminal TypeSpecifier TypeSpecifier;
+non terminal ArrayList<Definition> DefinitionList;
+non terminal Definition Defintion;
 
 /*Precedence of operators*/
 precedence left OR;
@@ -116,21 +118,22 @@ CompilationUnit ::= /*empty*/
                         RESULT.setLine(0);
                         RESULT.setColumn(0);
                     :}
-                 | ClassDefinitionList:list
-                    {:
-                        RESULT = new CompilationUnit();
-                        RESULT.setClassDefinitions(list);
-                        RESULT.setLine(listleft);
-                        RESULT.setColumn(listright);
-                    :}
-                 | FunctionDefinitionList:list
-                    {:
-                        RESULT = new CompilationUnit();
-                        RESULT.setFunctionDefinitions(list);
-                        RESULT.setLine(listleft);
-                        RESULT.setColumn(listright);
-                    :}
+                 | DefinitionList:list
+                   {:
+                   	RESULT = new CompilationUnit(list);
+                   	RESULT.setLine(listleft);
+                   	RESULT.setColumn(listright);
+                   :}
                   ;
+                  
+Definition ::= /*empty*/
+             | ClassDefinition
+	     | FunctionDefinition
+	     ;
+			
+DefinitionList ::= ClassDefinitionList
+		 | FunctionDefinitionList
+	         ;
 
 ClassDefinition ::= CLASS IDENTIFIER:i LBRACKET RBRACKET
                     {:
@@ -289,13 +292,13 @@ Stmt ::= WHILE:w LPAREN Expr:e RPAREN Stmt:cs
          :}
        | Expr:e SEMICOLON
          {:
-            RESULT = new PlainStmt(e);
+            RESULT = new PlainStatement(e);
             RESULT.setLine(eleft);
             RESULT.setColumn(eright);
          :}
        | RETURN Expr:e SEMICOLON
          {:
-            RESULT = new ReturnStmt(e);
+            RESULT = new ReturnStatement(e);
             RESULT.setLine(eleft);
             RESULT.setColumn(eright);
          :}
@@ -307,7 +310,7 @@ Stmt ::= WHILE:w LPAREN Expr:e RPAREN Stmt:cs
          :}
        | CONTINUE:c SEMICOLON
          {:
-            RESULT = new ContinueStmt();
+            RESULT = new ContinueStatement();
             RESULT.setLine(cleft);
             RESULT.setColumn(cright);
          :}
@@ -319,13 +322,13 @@ Stmt ::= WHILE:w LPAREN Expr:e RPAREN Stmt:cs
          :}
        | TypeSpecifier:t IDENTIFIER:i SEMICOLON
          {:
-            RESULT = new TypeSpecifierStmt(t,i);
+            RESULT = new TypeSpecifierStatement(t,i);
             RESULT.setLine(tleft);
             RESULT.setColumn(tright);
          :}
        | DO CompoundStmt:c WHILE LPAREN Expr:e RPAREN SEMICOLON
          {:
-            RESULT = new DoWhileStmt(e,c);
+            RESULT = new DoWhileStatement(e,c);
             RESULT.setLine(cleft);
             RESULT.setColumn(cright);
          :}

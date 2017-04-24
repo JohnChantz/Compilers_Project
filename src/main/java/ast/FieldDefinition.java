@@ -1,6 +1,6 @@
 package ast;
 
-public class FieldDefinition extends ASTNode{
+public class FieldDefinition extends Definition{
     
     private TypeSpecifier typeSpecifier;
     private IdentifierExpression identifier;

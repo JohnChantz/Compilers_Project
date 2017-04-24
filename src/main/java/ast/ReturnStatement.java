@@ -1,10 +1,10 @@
 package ast;
 
-public class ReturnStmt extends Statement {
+public class ReturnStatement extends Statement {
 
     private Expression expr;
 
-    public ReturnStmt(Expression expr) {
+    public ReturnStatement(Expression expr) {
         this.expr = expr;
     }
 

@@ -15,9 +15,9 @@ mvn package
 
 3. Execute
 
-java -jar target/compiler-0.0.3.jar input-filename
+java -jar target/compiler-0.0.5.jar input-filename
 
 or 
 
-java -cp target/compiler-0.0.3.jar Compiler input-filename
+java -cp target/compiler-0.0.5.jar org.hua.Compiler input-filename
 

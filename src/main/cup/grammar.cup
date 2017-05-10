@@ -1,10 +1,18 @@
+/**
+ *  This code is part of the lab exercises for the Compilers course
+ *  at Harokopio University of Athens, Dept. of Informatics and Telematics.
+ */
+
+package org.hua;
+
 import java_cup.runtime.Symbol;
 import java.util.List;
 import java.util.ArrayList;
+import org.objectweb.asm.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ast.*;
+import org.hua.ast.*;
 
 parser code
 {:
@@ -63,7 +71,7 @@ terminal DO, WHILE;
 terminal LPAREN, RPAREN;
 terminal LBRACKET, RBRACKET;
 terminal GREATER, GREATER_EQ, LESS, LESS_EQ;
-terminal EQUAL, NOT_EQUAL, NOT, ASSIGN, WRITE;
+terminal EQUAL, NOT_EQUAL, NOT, ASSIGN, WRITE,PRINT;
 terminal TIMES, DIVISION, MOD;
 terminal PLUS, MINUS, UMINUS;
 terminal IF,ELSE;
@@ -76,7 +84,6 @@ terminal java.lang.Integer INTEGER_LITERAL;
 terminal java.lang.Double  DOUBLE_LITERAL;
 terminal java.lang.String  STRING_LITERAL;
 terminal java.lang.String IDENTIFIER;
-
 
 /*Non Terminals*/
 non terminal Expression Expr;
@@ -340,7 +347,7 @@ Stmt ::= WRITE:wr LPAREN Expr:e RPAREN SEMICOLON
          :}
        | BREAK:b SEMICOLON
          {:
-            RESULT = new BreakStmt();
+            RESULT = new BreakStatement();
             RESULT.setLine(bleft);
             RESULT.setColumn(bright);
          :}
@@ -508,7 +515,7 @@ Expr ::= /*empty*/
          :}
        | Expr:e1 LESS_EQ Expr:e2
          {:
-           RESULT = new BinaryExpression(Operator.LESS_EQ,e1,e2);
+           RESULT = new BinaryExpression(Operator.LESS_EQUAL,e1,e2);
            RESULT.setLine(e1left);
            RESULT.setColumn(e2right);
          :}
@@ -520,7 +527,7 @@ Expr ::= /*empty*/
          :}
        | Expr:e1 GREATER_EQ Expr:e2
          {:
-           RESULT = new BinaryExpression(Operator.GREATER_EQ,e1,e2);
+           RESULT = new BinaryExpression(Operator.GREATER_EQUAL,e1,e2);
            RESULT.setLine(e1left);
            RESULT.setColumn(e2right);
          :}

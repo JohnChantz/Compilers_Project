@@ -7,7 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="" level="${log.level:-DEBUG}" />
+    <logger name="org.hua" level="${log.level:-DEBUG}" />
     
     <root level="${log.level:-INFO}">
         <appender-ref ref="STDOUT" />

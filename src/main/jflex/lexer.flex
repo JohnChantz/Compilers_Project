@@ -3,7 +3,8 @@
  *  at Harokopio University of Athens, Dept. of Informatics and Telematics.
  */
 
-import static java.lang.System.out;
+package org.hua;
+
 import java_cup.runtime.Symbol;
 
 %%
@@ -34,7 +35,7 @@ import java_cup.runtime.Symbol;
 %}
 
 LineTerminator = \r|\n|\r\n
-WhiteSpace     = {LineTerminator} | [ \t\f]
+WhiteSpace     = {LineTerminator} | [ \t\f] 
 Comment        = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 
 Identifier     = [:jletter:] [:jletterdigit:]*
@@ -53,6 +54,7 @@ FloatLiteral   = {Float1} | {Float2} | {Float3} | {Float4}
 
 <YYINITIAL> {
     /* reserved keywords */
+    "print"                        { return createSymbol(sym.PRINT); }
     "number"                       { return createSymbol(sym.NUMBER);}
     "string"                       { return createSymbol(sym.STRING);}
     "void"                         { return createSymbol(sym.VOID);}
@@ -67,7 +69,7 @@ FloatLiteral   = {Float1} | {Float2} | {Float3} | {Float4}
     "continue"                     { return createSymbol(sym.CONTINUE);}
     "write"                        { return createSymbol(sym.WRITE);}
 
-    /* identifiers */
+    /* identifiers */ 
     {Identifier}                   { return createSymbol(sym.IDENTIFIER, yytext()); }
 
     {IntegerLiteral}               { return createSymbol(sym.INTEGER_LITERAL, Integer.valueOf(yytext())); }

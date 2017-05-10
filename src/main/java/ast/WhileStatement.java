@@ -1,16 +1,11 @@
 package ast;
 
-import ast.ASTVisitor;
-import ast.ASTVisitorException;
-import ast.Expression;
-import ast.Statement;
-
 public class WhileStatement extends Statement {
     
     private Expression expression;
-    private Statement statement;
+    private CompoundStatement statement;
     
-    public WhileStatement(Expression expression,Statement statement){
+    public WhileStatement(Expression expression,CompoundStatement statement){
         this.expression = expression;
         this.statement = statement;
     }
@@ -23,11 +18,11 @@ public class WhileStatement extends Statement {
         this.expression = expression;
     }
 
-    public Statement getStatement() {
+    public CompoundStatement getStatement() {
         return statement;
     }
 
-    public void setStatement(Statement statement) {
+    public void setStatement(CompoundStatement statement) {
         this.statement = statement;
     }
 

@@ -39,8 +39,6 @@ public interface ASTVisitor {
 
     void visit(TypeSpecifierStatement node) throws ASTVisitorException;
 
-    void visit(TypeSpecifier node) throws ASTVisitorException;
-
     void visit(FunctionDefinition node) throws ASTVisitorException;
 
     void visit(FieldOrFunctionDefinition node) throws ASTVisitorException;
@@ -52,4 +50,26 @@ public interface ASTVisitor {
     void visit(PlainStatement node) throws  ASTVisitorException;
 
     void visit(DoWhileStatement node) throws ASTVisitorException;
+
+    void visit(Definitions node) throws ASTVisitorException;
+
+    void visit(IdentifierTypeSpecifier node) throws ASTVisitorException;
+
+    void visit(VoidTypeSpecifier node) throws ASTVisitorException;
+
+    void visit(StringTypeSpecifier node) throws ASTVisitorException;
+
+    void visit(NumberTypeSpecifier node) throws ASTVisitorException;
+
+    void visit(WriteStatement node) throws ASTVisitorException;
+
+    void visit(DotExpression node) throws ASTVisitorException;
+
+    void visit(NullExpression node) throws ASTVisitorException;
+
+    void visit(NewExpression node) throws ASTVisitorException;
+
+    void visit(DotExpressionList node) throws ASTVisitorException;
+
+    void visit(ParameterDeclaration node) throws ASTVisitorException;
 }

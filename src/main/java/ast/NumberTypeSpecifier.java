@@ -1,12 +1,13 @@
 package ast;
 
-public class NullExpression extends Expression{
+public class NumberTypeSpecifier extends TypeSpecifier{
 
-    public NullExpression() {
+    public NumberTypeSpecifier() {
     }
 
     @Override
     public void accept(ASTVisitor visitor) throws ASTVisitorException {
         visitor.visit(this);
     }
+    
 }

@@ -10,7 +10,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath Compiler examples/example1.txt</exec.args>
+                <exec.args>-classpath %classpath Compiler examples/example2.txt</exec.args>
                 <exec.executable>java</exec.executable>
                 <exec.workingdir>C:\Users\John Ch\Documents\GitHub\Compilers_Project</exec.workingdir>
             </properties>
@@ -25,7 +25,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath Compiler examples/example1.txt</exec.args>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath Compiler examples/example2.txt</exec.args>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
                 <exec.workingdir>C:\Users\John Ch\Documents\GitHub\Compilers_Project</exec.workingdir>
@@ -41,7 +41,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath Compiler examples/example1.txt</exec.args>
+                <exec.args>-classpath %classpath Compiler examples/example2.txt</exec.args>
                 <exec.executable>java</exec.executable>
                 <exec.workingdir>C:\Users\John Ch\Documents\GitHub\Compilers_Project</exec.workingdir>
             </properties>

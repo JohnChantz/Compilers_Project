@@ -1,13 +1,12 @@
 package ast;
 
-import ast.ASTVisitor;
-import ast.ASTVisitorException;
-import ast.Expression;
 
 public class IdentifierExpression extends Expression {
 
     private String identifier;
 
+    public IdentifierExpression(){}
+    
     public IdentifierExpression(String identifier) {
         this.identifier = identifier;
     }

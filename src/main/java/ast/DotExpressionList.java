@@ -5,12 +5,12 @@ import java.util.ArrayList;
 public class DotExpressionList extends Expression{
 
     private Expression exp;
-    private String identifier;
+    private IdentifierExpression identifier;
     private ArrayList<Expression> list;
 
     public DotExpressionList(Expression exp, String identifier, ArrayList<Expression> list) {
         this.exp = exp;
-        this.identifier = identifier;
+        this.identifier = new IdentifierExpression(identifier);
         this.list = list;
     }
 
@@ -22,11 +22,11 @@ public class DotExpressionList extends Expression{
         this.exp = exp;
     }
 
-    public String getIdentifier() {
+    public IdentifierExpression getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierExpression identifier) {
         this.identifier = identifier;
     }
 
@@ -40,6 +40,6 @@ public class DotExpressionList extends Expression{
 
     @Override
     public void accept(ASTVisitor visitor) throws ASTVisitorException {
-
+        visitor.visit(this);
     }
 }

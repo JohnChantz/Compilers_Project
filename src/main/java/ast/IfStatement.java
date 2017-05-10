@@ -3,9 +3,9 @@ package ast;
 public class IfStatement extends Statement {
     
     private Expression expression;
-    private Statement statement;
+    private CompoundStatement statement;
 
-    public IfStatement(Expression expression, Statement statement) {
+    public IfStatement(Expression expression, CompoundStatement statement) {
         this.expression = expression;
         this.statement = statement;
     }
@@ -18,11 +18,11 @@ public class IfStatement extends Statement {
         this.expression = expression;
     }
 
-    public Statement getStatement() {
+    public CompoundStatement getStatement() {
         return statement;
     }
 
-    public void setStatement(Statement statement) {
+    public void setStatement(CompoundStatement statement) {
         this.statement = statement;
     }
 

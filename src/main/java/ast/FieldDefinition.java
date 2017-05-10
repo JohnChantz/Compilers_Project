@@ -9,6 +9,8 @@ public class FieldDefinition extends Definition{
         this.typeSpecifier = typeSpecifier;
         this.identifier = new IdentifierExpression(identifier);
     }
+    
+    public FieldDefinition(){}
 
     public TypeSpecifier getTypeSpecifier() {
         return typeSpecifier;

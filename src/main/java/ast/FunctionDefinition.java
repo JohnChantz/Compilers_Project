@@ -9,7 +9,7 @@ public class FunctionDefinition extends Definition{
     private ArrayList<ParameterDeclaration> parameterList;
     private CompoundStatement compoundStatement;
 
-    
+    public FunctionDefinition(){}
     
     public FunctionDefinition(TypeSpecifier typeSpecifier,String identifier,ArrayList<ParameterDeclaration> parameterList,CompoundStatement compStmt) {
         this.typeSpecifier = typeSpecifier;

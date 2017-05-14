@@ -120,14 +120,14 @@ public class PrintASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(TypeSpecifierStatement node) throws ASTVisitorException {
-        node.getTypeSpecifier().accept(this);
+        System.out.println(node.getType().toString());
         node.getIdentifier().accept(this);
         System.out.println(";");
     }
 
     @Override
     public void visit(FunctionDefinition node) throws ASTVisitorException {
-        node.getTypeSpecifier().accept(this);
+        System.out.println(node.getTypeSpecifier().toString());
         node.getIdentifier().accept(this);
         System.out.print("(");
         if(node.getParameterList().size() == 1){
@@ -160,7 +160,7 @@ public class PrintASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(FieldDefinition node) throws ASTVisitorException {
-        node.getTypeSpecifier().accept(this);
+        System.out.println(node.getTypeSpecifier().toString());
         node.getIdentifier().accept(this);
         System.out.println(";");
     }
@@ -197,27 +197,6 @@ public class PrintASTVisitor implements ASTVisitor {
             node.getFunctionDefinition().accept(this);
         if(node.getFunctionDefinition() == null)
             node.getClassDefinition().accept(this);
-    }
-
-    @Override
-    public void visit(IdentifierTypeSpecifier node) throws ASTVisitorException {
-        node.getIdentifier().accept(this);
-        System.out.print(" ");
-    }
-
-    @Override
-    public void visit(VoidTypeSpecifier node) throws ASTVisitorException {
-        System.out.print("void ");
-    }
-
-    @Override
-    public void visit(StringTypeSpecifier node) throws ASTVisitorException {
-        System.out.print("string ");
-    }
-
-    @Override
-    public void visit(NumberTypeSpecifier node) throws ASTVisitorException {
-        System.out.print("number ");
     }
 
      @Override
@@ -265,18 +244,16 @@ public class PrintASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ParameterDeclaration node) throws ASTVisitorException {
-        node.getTypeSpecifier().accept(this);
+        System.out.println(node.getTypeSpecifier().toString());
         node.getIdentifier().accept(this);
     }
 
     @Override
-    public void visit(VarDeclarationStatement node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void visit(PrintStatement node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.print("print");
+        System.out.print("(");
+        node.getExpression().accept(this);
+        System.out.println(");");
     }
 
 }

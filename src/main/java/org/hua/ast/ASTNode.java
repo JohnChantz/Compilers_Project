@@ -1,24 +1,8 @@
-/**
- * This code is part of the lab exercises for the Compilers course at Harokopio
- * University of Athens, Dept. of Informatics and Telematics.
- */
 package org.hua.ast;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Abstract syntax tree node.
- *
- * This is the basic tree node class. Every other tree node is an instance of
- * this node.
- *
- * <p>
- * This node has a method in order to be able to accept an abstract syntax tree
- * visitor. Moreover it contains a map in order to store properties at the
- * nodes.
- * </p>
- */
 public abstract class ASTNode {
 
     private final Map<String, Object> properties;

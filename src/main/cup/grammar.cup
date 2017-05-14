@@ -101,7 +101,7 @@ non terminal FunctionDefinition FunctionDefinition;
 non terminal ArrayList<FunctionDefinition> FunctionDefinitionList;
 non terminal ArrayList<ParameterDeclaration> ParameterList;
 non terminal ParameterDeclaration ParameterDeclaration;
-non terminal TypeSpecifier TypeSpecifier;
+non terminal Type TypeSpecifier;
 non terminal ArrayList<Definitions> DefinitionsList;
 non terminal Definitions Definitions;
 
@@ -214,16 +214,16 @@ FieldOrFunctionDefinitionList ::= FieldOrFunctionDefinition:d
 FieldDefinition ::= TypeSpecifier:ts IDENTIFIER:i SEMICOLON
                     {:
                         RESULT = new FieldDefinition(ts,i);
-                        RESULT.setLine(tsleft);
-                        RESULT.setColumn(tsright);
+                        RESULT.setLine(ileft);
+                        RESULT.setColumn(iright);
                     :}
                   ;
 
 FunctionDefinition ::= TypeSpecifier:t IDENTIFIER:i LPAREN ParameterList:pl RPAREN CompoundStmt:cs
                        {:
                             RESULT = new FunctionDefinition(t,i,pl,cs);
-                            RESULT.setLine(tleft);
-                            RESULT.setColumn(tright);
+                            RESULT.setLine(ileft);
+                            RESULT.setColumn(iright);
                        :}
                      ;
 
@@ -258,34 +258,26 @@ ParameterList ::= /*empty*/
 ParameterDeclaration ::= TypeSpecifier:ts IDENTIFIER:i
                          {:
                             RESULT = new ParameterDeclaration(ts,i);
-                            RESULT.setLine(tsleft);
-                            RESULT.setColumn(tsright);
+                            RESULT.setLine(ileft);
+                            RESULT.setColumn(iright);
                          :}
                        ;
 
 TypeSpecifier ::= NUMBER:n
                   {:
-                    RESULT = new NumberTypeSpecifier();
-                    RESULT.setLine(nleft);
-                    RESULT.setColumn(nright);
+                    RESULT = Type.DOUBLE_TYPE;
                   :}
                 | STRING:s
                   {:
-                    RESULT = new StringTypeSpecifier();
-                    RESULT.setLine(sleft);
-                    RESULT.setColumn(sright);
+                    RESULT = Type.getType(String.class);
                   :}
                 | VOID:v
                   {:
-                    RESULT = new VoidTypeSpecifier();
-                    RESULT.setLine(vleft);
-                    RESULT.setColumn(vright);
+                    RESULT = Type.VOID_TYPE;
                   :}
                 | IDENTIFIER:i
                   {:
-                    RESULT = new IdentifierTypeSpecifier(i);
-                    RESULT.setLine(ileft);
-                    RESULT.setColumn(iright);
+                    RESULT = Type.getType(String.class);
                   :}
                 ;
 
@@ -366,8 +358,8 @@ Stmt ::= WRITE:wr LPAREN Expr:e RPAREN SEMICOLON
        | TypeSpecifier:t IDENTIFIER:i SEMICOLON
          {:
             RESULT = new TypeSpecifierStatement(t,i);
-            RESULT.setLine(tleft);
-            RESULT.setColumn(tright);
+            RESULT.setLine(ileft);
+            RESULT.setColumn(iright);
          :}
        | DO CompoundStmt:c WHILE LPAREN Expr:e RPAREN SEMICOLON
          {:

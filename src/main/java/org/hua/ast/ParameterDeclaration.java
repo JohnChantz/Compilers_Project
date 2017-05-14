@@ -1,20 +1,22 @@
 package org.hua.ast;
 
+import org.objectweb.asm.Type;
+
 public class ParameterDeclaration extends ASTNode{
 
-    private TypeSpecifier typeSpecifier;
+    private Type typeSpecifier;
     private IdentifierExpression identifier;
     
-    public ParameterDeclaration(TypeSpecifier typeSpecifier, String identifier){
+    public ParameterDeclaration(Type typeSpecifier, String identifier){
         this.typeSpecifier = typeSpecifier;
         this.identifier = new IdentifierExpression(identifier);
     }
 
-    public TypeSpecifier getTypeSpecifier() {
+    public Type getTypeSpecifier() {
         return typeSpecifier;
     }
 
-    public void setTypeSpecifier(TypeSpecifier typeSpecifier) {
+    public void setTypeSpecifier(Type typeSpecifier) {
         this.typeSpecifier = typeSpecifier;
     }
 

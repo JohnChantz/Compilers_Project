@@ -1,28 +1,29 @@
 package org.hua.ast;
 
 import java.util.ArrayList;
+import org.objectweb.asm.Type;
 
 public class FunctionDefinition extends Definition{
 
-    private TypeSpecifier typeSpecifier;
+    private Type typeSpecifier;
     private IdentifierExpression identifier;
     private ArrayList<ParameterDeclaration> parameterList;
     private CompoundStatement compoundStatement;
 
     public FunctionDefinition(){}
     
-    public FunctionDefinition(TypeSpecifier typeSpecifier,String identifier,ArrayList<ParameterDeclaration> parameterList,CompoundStatement compStmt) {
+    public FunctionDefinition(Type typeSpecifier,String identifier,ArrayList<ParameterDeclaration> parameterList,CompoundStatement compStmt) {
         this.typeSpecifier = typeSpecifier;
         this.identifier = new IdentifierExpression(identifier);
         this.parameterList = parameterList;
         this.compoundStatement = compStmt;
     }
 
-    public TypeSpecifier getTypeSpecifier() {
+    public Type getTypeSpecifier() {
         return typeSpecifier;
     }
 
-    public void setTypeSpecifier(TypeSpecifier typeSpecifier) {
+    public void setTypeSpecifier(Type typeSpecifier) {
         this.typeSpecifier = typeSpecifier;
     }
 

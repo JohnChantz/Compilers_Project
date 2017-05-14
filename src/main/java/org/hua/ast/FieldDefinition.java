@@ -1,22 +1,24 @@
 package org.hua.ast;
 
+import org.objectweb.asm.Type;
+
 public class FieldDefinition extends Definition{
     
-    private TypeSpecifier typeSpecifier;
+    private Type typeSpecifier;
     private IdentifierExpression identifier;
 
-    public FieldDefinition(TypeSpecifier typeSpecifier, String identifier) {
+    public FieldDefinition(Type typeSpecifier, String identifier) {
         this.typeSpecifier = typeSpecifier;
         this.identifier = new IdentifierExpression(identifier);
     }
     
     public FieldDefinition(){}
 
-    public TypeSpecifier getTypeSpecifier() {
+    public Type getTypeSpecifier() {
         return typeSpecifier;
     }
 
-    public void setTypeSpecifier(TypeSpecifier typeSpecifier) {
+    public void setTypeSpecifier(Type typeSpecifier) {
         this.typeSpecifier = typeSpecifier;
     }
 

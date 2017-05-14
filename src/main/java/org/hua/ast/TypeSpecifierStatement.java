@@ -1,21 +1,23 @@
 package org.hua.ast;
 
+import org.objectweb.asm.Type;
+
 public class TypeSpecifierStatement extends Statement {
 
-    private TypeSpecifier typeSpecifier;
+    private Type type;
     private IdentifierExpression identifier;
 
-    public TypeSpecifierStatement(TypeSpecifier typeSpecifier, String identifier) {
-        this.typeSpecifier = typeSpecifier;
+    public TypeSpecifierStatement(Type typeSpecifier, String identifier) {
+        this.type = typeSpecifier;
         this.identifier = new IdentifierExpression(identifier);
     }
 
-    public TypeSpecifier getTypeSpecifier() {
-        return typeSpecifier;
+    public Type getType() {
+        return type;
     }
 
-    public void setTypeSpecifier(TypeSpecifier typeSpecifier) {
-        this.typeSpecifier = typeSpecifier;
+    public void setType(Type typeSpecifier) {
+        this.type = typeSpecifier;
     }
 
     public IdentifierExpression getIdentifier() {

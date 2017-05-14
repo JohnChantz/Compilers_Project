@@ -1,12 +1,5 @@
-/**
- * This code is part of the lab exercises for the Compilers course at Harokopio
- * University of Athens, Dept. of Informatics and Telematics.
- */
 package org.hua.ast;
 
-/**
- * Abstract syntax tree visitor.
- */
 public interface ASTVisitor {
 
     void visit(CompilationUnit node) throws ASTVisitorException;
@@ -57,14 +50,6 @@ public interface ASTVisitor {
 
     void visit(Definitions node) throws ASTVisitorException;
 
-    void visit(IdentifierTypeSpecifier node) throws ASTVisitorException;
-
-    void visit(VoidTypeSpecifier node) throws ASTVisitorException;
-
-    void visit(StringTypeSpecifier node) throws ASTVisitorException;
-
-    void visit(NumberTypeSpecifier node) throws ASTVisitorException;
-
     void visit(WriteStatement node) throws ASTVisitorException;
 
     void visit(DotExpression node) throws ASTVisitorException;
@@ -77,8 +62,5 @@ public interface ASTVisitor {
 
     void visit(ParameterDeclaration node) throws ASTVisitorException;
 
-    void visit(VarDeclarationStatement node) throws ASTVisitorException;
-
     void visit(PrintStatement node) throws ASTVisitorException;
-
 }

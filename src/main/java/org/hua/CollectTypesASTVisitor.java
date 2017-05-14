@@ -1,7 +1,3 @@
-/**
- * This code is part of the lab exercises for the Compilers course at Harokopio
- * University of Athens, Dept. of Informatics and Telematics.
- */
 package org.hua;
 
 import java.util.logging.Level;
@@ -28,13 +24,11 @@ import org.hua.ast.FieldDefinition;
 import org.hua.ast.FieldOrFunctionDefinition;
 import org.hua.ast.FunctionDefinition;
 import org.hua.ast.IdentifierExpression;
-import org.hua.ast.IdentifierTypeSpecifier;
 import org.hua.ast.IfElseStatement;
 import org.hua.ast.IfStatement;
 import org.hua.ast.IntegerLiteralExpression;
 import org.hua.ast.NewExpression;
 import org.hua.ast.NullExpression;
-import org.hua.ast.NumberTypeSpecifier;
 import org.hua.ast.ParameterDeclaration;
 import org.hua.ast.ParenthesisExpression;
 import org.hua.ast.PlainStatement;
@@ -42,12 +36,9 @@ import org.hua.ast.PrintStatement;
 import org.hua.ast.ReturnStatement;
 import org.hua.ast.Statement;
 import org.hua.ast.StringLiteralExpression;
-import org.hua.ast.StringTypeSpecifier;
 import org.hua.ast.TypeSpecifierStatement;
 import org.hua.types.TypeUtils;
 import org.hua.ast.UnaryExpression;
-import org.hua.ast.VarDeclarationStatement;
-import org.hua.ast.VoidTypeSpecifier;
 import org.hua.ast.WhileStatement;
 import org.hua.ast.WriteStatement;
 import org.objectweb.asm.Type;
@@ -77,8 +68,9 @@ public class CollectTypesASTVisitor implements ASTVisitor {
         if(TypeUtils.isAssignable(type1, type2)){
             node.getExpression1().accept(this);
             node.getExpression2().accept(this);
-        }else{
             ASTUtils.setType(node, TypeUtils.maxType(type1, type2));
+        }else{
+            ASTUtils.error(node, " No Assignable statement!");
         }
     }
 
@@ -134,7 +126,6 @@ public class CollectTypesASTVisitor implements ASTVisitor {
             Type type = symTableEntry.getType();
             ASTUtils.setType(node, type);
         }
-
     }
 
     @Override
@@ -175,11 +166,6 @@ public class CollectTypesASTVisitor implements ASTVisitor {
             ASTUtils.error(node.getExpression(), "Invalid expression, should be boolean");
         }
         node.getStatement().accept(this);
-        ASTUtils.setType(node, Type.VOID_TYPE);
-    }
-
-    @Override
-    public void visit(VarDeclarationStatement node) throws ASTVisitorException {
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
@@ -225,22 +211,43 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(TypeSpecifierStatement node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(FunctionDefinition node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        SymTable<SymTableEntry> env = ASTUtils.getSafeEnv(node);
+        String id = node.getIdentifier().getIdentifier();
+        SymTableEntry symTableEntry = env.lookup(id);
+        if ( symTableEntry == null ) {
+            ASTUtils.error(node, "Function"+ id +" not definied!");
+        }
+        else {
+            Type type = symTableEntry.getType();
+            ASTUtils.setType(node, type);
+        }
     }
 
     @Override
     public void visit(FieldOrFunctionDefinition node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(node.getFieldDef() == null)
+            node.getFunctionDef().accept(this);
+        if(node.getFunctionDef() == null)
+            node.getFieldDef().accept(this);
     }
 
     @Override
     public void visit(FieldDefinition node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        SymTable<SymTableEntry> env = ASTUtils.getSafeEnv(node);
+        String id = node.getIdentifier().getIdentifier();
+        SymTableEntry symTableEntry = env.lookup(id);
+        if ( symTableEntry == null ) {
+            ASTUtils.error(node, "Field"+ id +" not definied!");
+        }
+        else {
+            Type type = symTableEntry.getType();
+            ASTUtils.setType(node, type);
+        }
     }
 
     @Override
@@ -256,57 +263,47 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(Definitions node) throws ASTVisitorException {
-        node.accept(this);
-    }
-
-    @Override
-    public void visit(IdentifierTypeSpecifier node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void visit(VoidTypeSpecifier node) throws ASTVisitorException {
-        ASTUtils.setType(node, Type.VOID_TYPE);
-    }
-
-    @Override
-    public void visit(StringTypeSpecifier node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void visit(NumberTypeSpecifier node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(node.getClassDefinition() == null)
+            node.getFunctionDefinition().accept(this);
+        if(node.getFunctionDefinition() == null)
+            node.getClassDefinition().accept(this);
     }
 
     @Override
     public void visit(WriteStatement node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.accept(this);
+        ASTUtils.setType(node, Type.VOID_TYPE);
+
     }
 
     @Override
     public void visit(DotExpression node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.accept(this);
+        ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(NullExpression node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.accept(this);
+        ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(NewExpression node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.accept(this);
+        ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(DotExpressionList node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.accept(this);
+        ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(ParameterDeclaration node) throws ASTVisitorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        node.getTypeSpecifier();
+        node.getIdentifier().accept(this);
     }
 
 }

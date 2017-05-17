@@ -4,20 +4,20 @@ import org.objectweb.asm.Type;
 
 public class ParameterDeclaration extends ASTNode{
 
-    private Type typeSpecifier;
+    private Type type;
     private IdentifierExpression identifier;
     
     public ParameterDeclaration(Type typeSpecifier, String identifier){
-        this.typeSpecifier = typeSpecifier;
+        this.type = typeSpecifier;
         this.identifier = new IdentifierExpression(identifier);
     }
 
-    public Type getTypeSpecifier() {
-        return typeSpecifier;
+    public Type getType() {
+        return type;
     }
 
-    public void setTypeSpecifier(Type typeSpecifier) {
-        this.typeSpecifier = typeSpecifier;
+    public void setType(Type typeSpecifier) {
+        this.type = typeSpecifier;
     }
 
     public IdentifierExpression getIdentifier() {

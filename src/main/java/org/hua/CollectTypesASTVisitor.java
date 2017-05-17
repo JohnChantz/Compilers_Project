@@ -128,16 +128,19 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(IntegerLiteralExpression node) throws ASTVisitorException {
+        //set node type = int
         ASTUtils.setType(node, Type.INT_TYPE);
     }
 
     @Override
     public void visit(DoubleLiteralExpression node) throws ASTVisitorException {
+        //set node type = double
         ASTUtils.setType(node, Type.DOUBLE_TYPE);
     }
 
     @Override
     public void visit(StringLiteralExpression node) throws ASTVisitorException {
+        //set node type = String
         ASTUtils.setType(node, Type.getType(String.class));
     }
 
@@ -169,11 +172,13 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(BreakStatement node) throws ASTVisitorException {
+        //set node type = void
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(ContinueStatement node) throws ASTVisitorException {
+        //set node type = void
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
@@ -200,12 +205,14 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ReturnStatement node) throws ASTVisitorException {
+        //set node type = void        
         ASTUtils.setType(node, Type.VOID_TYPE);
 
     }
 
     @Override
     public void visit(TypeSpecifierStatement node) throws ASTVisitorException {
+        //set node type = void        
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
@@ -247,12 +254,14 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ClassDefinition node) throws ASTVisitorException {
+        //set node type = void        
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(PlainStatement node) throws ASTVisitorException {
-        node.accept(this);
+        node.getExp().accept(this);
+        ASTUtils.setType(node, Type.VOID_TYPE);        
     }
 
     @Override
@@ -265,38 +274,41 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(WriteStatement node) throws ASTVisitorException {
-        node.accept(this);
+        node.getExpression().accept(this);
         ASTUtils.setType(node, Type.VOID_TYPE);
 
     }
 
     @Override
     public void visit(DotExpression node) throws ASTVisitorException {
-        node.accept(this);
+        node.getExp().accept(this);
+        node.getIdentifier().accept(this);
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(NullExpression node) throws ASTVisitorException {
-        node.accept(this);
+        //set node type = void
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(NewExpression node) throws ASTVisitorException {
-        node.accept(this);
+        node.getIdentifier().accept(this);
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(DotExpressionList node) throws ASTVisitorException {
-        node.accept(this);
+        node.getExp().accept(this);
+        node.getIdentifier().accept(this);
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(ParameterDeclaration node) throws ASTVisitorException {
-        node.getTypeSpecifier();
+        Type type = node.getType();
+        ASTUtils.setType(node, type);
         node.getIdentifier().accept(this);
     }
 

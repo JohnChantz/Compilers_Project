@@ -120,14 +120,14 @@ public class PrintASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(TypeSpecifierStatement node) throws ASTVisitorException {
-        System.out.println(node.getType().toString());
+        System.out.print(node.getType() + " ");
         node.getIdentifier().accept(this);
         System.out.println(";");
     }
 
     @Override
     public void visit(FunctionDefinition node) throws ASTVisitorException {
-        System.out.println(node.getTypeSpecifier().toString());
+        System.out.print(node.getType() + " ");
         node.getIdentifier().accept(this);
         System.out.print("(");
         if(node.getParameterList().size() == 1){
@@ -160,7 +160,7 @@ public class PrintASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(FieldDefinition node) throws ASTVisitorException {
-        System.out.println(node.getTypeSpecifier().toString());
+        System.out.print(node.getType() + " ");
         node.getIdentifier().accept(this);
         System.out.println(";");
     }
@@ -244,7 +244,7 @@ public class PrintASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ParameterDeclaration node) throws ASTVisitorException {
-        System.out.println(node.getTypeSpecifier().toString());
+        System.out.print(node.getType() + " ");
         node.getIdentifier().accept(this);
     }
 

@@ -151,32 +151,29 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(TypeSpecifierStatement node) throws ASTVisitorException {
-         SymTable<SymTableEntry> env = ASTUtils.getSafeEnv(node);
-
+        SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
         String id = node.getIdentifier().getIdentifier();
         Type type = node.getType();
         
-        if (env.lookupOnlyInTop(id) != null ) {
-            String message = "The variable "+id+" exists!";
+        if (symTable.lookupOnlyInTop(id) != null ) {
+            String message = "The variable already "+id+" exists!";
             ASTUtils.error(node, message);
         }
         else {
-            env.put(id, new SymTableEntry(id, type));
+            symTable.put(id, new SymTableEntry(id, type));
         }
     }
 
     @Override
     public void visit(FunctionDefinition node) throws ASTVisitorException {
         SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
-        
-        Type type = node.getTypeSpecifier();
+        Type type = node.getType();
         String id = node.getIdentifier().getIdentifier();
         
         if (symTable.lookupOnlyInTop(id) != null ) {
             String message = "The function "+id+" exists!";
             ASTUtils.error(node, message);
-        }
-        else {
+        }else {
             symTable.put(id, new SymTableEntry(id, type));
         }
         node.getCompoundStatement().accept(this);
@@ -192,13 +189,19 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(FieldDefinition node) throws ASTVisitorException {
-        node.getTypeSpecifier();
+        node.getType();
         node.getIdentifier().accept(this);
     }
 
     @Override
     public void visit(ClassDefinition node) throws ASTVisitorException {
-        node.getIdentifier().accept(this);
+        SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
+        String id = node.getIdentifier().getIdentifier();
+        
+        if(symTable.lookupOnlyInTop(id) != null){
+            ASTUtils.error(node, "Class with name "+ id +" already exists!");
+        }
+        symTable.put(id, new SymTableEntry(id,Type.VOID_TYPE));
         for (FieldOrFunctionDefinition f : node.getFieldOrFunctionDefinitions()) {
             f.accept(this);
         }
@@ -248,7 +251,7 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ParameterDeclaration node) throws ASTVisitorException {
-        node.getTypeSpecifier();
+        node.getType();
         node.getIdentifier().accept(this);
     }
 

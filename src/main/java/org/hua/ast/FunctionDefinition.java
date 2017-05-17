@@ -5,7 +5,7 @@ import org.objectweb.asm.Type;
 
 public class FunctionDefinition extends Definition{
 
-    private Type typeSpecifier;
+    private Type type;
     private IdentifierExpression identifier;
     private ArrayList<ParameterDeclaration> parameterList;
     private CompoundStatement compoundStatement;
@@ -13,18 +13,18 @@ public class FunctionDefinition extends Definition{
     public FunctionDefinition(){}
     
     public FunctionDefinition(Type typeSpecifier,String identifier,ArrayList<ParameterDeclaration> parameterList,CompoundStatement compStmt) {
-        this.typeSpecifier = typeSpecifier;
+        this.type = typeSpecifier;
         this.identifier = new IdentifierExpression(identifier);
         this.parameterList = parameterList;
         this.compoundStatement = compStmt;
     }
 
-    public Type getTypeSpecifier() {
-        return typeSpecifier;
+    public Type getType() {
+        return type;
     }
 
-    public void setTypeSpecifier(Type typeSpecifier) {
-        this.typeSpecifier = typeSpecifier;
+    public void setType(Type typeSpecifier) {
+        this.type = typeSpecifier;
     }
 
     public IdentifierExpression getIdentifier() {

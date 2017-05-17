@@ -1,7 +1,5 @@
 package org.hua;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.hua.symbol.SymTable;
 import org.hua.symbol.SymTableEntry;
 import org.hua.ast.ASTUtils;
@@ -171,13 +169,11 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(BreakStatement node) throws ASTVisitorException {
-        node.accept(this);
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(ContinueStatement node) throws ASTVisitorException {
-        node.accept(this);
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
@@ -204,7 +200,6 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ReturnStatement node) throws ASTVisitorException {
-        node.accept(this);
         ASTUtils.setType(node, Type.VOID_TYPE);
 
     }
@@ -252,7 +247,6 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ClassDefinition node) throws ASTVisitorException {
-        node.accept(this);
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 

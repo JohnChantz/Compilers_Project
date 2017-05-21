@@ -1,0 +1,22 @@
+/*Sample Program 4*/
+class MyClass{
+  number n;
+  void append(){
+    number n;
+    n="fdfs";
+  }
+}
+
+void main(){
+  MessageStore store;
+  store = new MessageStore();
+  Message it;
+  it = store.first;
+  number i;
+  i = 0;
+  while(it != null){
+    write("Message " + i + " is: " + it.text);
+    i=i+1;
+    it = it.next;
+}
+}

@@ -9,7 +9,6 @@
      }
      return i + this.sum(i-1);
    }
-
  }
 
 void main() {

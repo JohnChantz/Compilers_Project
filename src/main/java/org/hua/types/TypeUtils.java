@@ -7,6 +7,8 @@ import org.objectweb.asm.Type;
 public class TypeUtils {
 
     public static final Type STRING_TYPE = Type.getType(String.class);
+    public static final Type CLASS_TYPE = Type.getType("Ljava/lang/Class;");
+    public static final Type FUNCTION_TYPE = Type.getType("Ljava/lang/Function;");
 
     private TypeUtils() {
     }
@@ -122,7 +124,7 @@ public class TypeUtils {
             if (TypeUtils.areComparable(t1, t2)) {
                 return Type.BOOLEAN_TYPE;
             } else {
-                throw new TypeException("Expressions are not comparable");
+                throw new TypeException("Using relational operator with no number parameters!");
             }
         } else if (op.equals(Operator.PLUS)) {
             return maxType(t1, t2);

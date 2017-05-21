@@ -12,6 +12,10 @@ public class ASTUtils {
     public static final String SYMTABLE_PROPERTY = "SYMTABLE_PROPERTY";
     public static final String IS_BOOLEAN_EXPR_PROPERTY = "IS_BOOLEAN_EXPR_PROPERTY";
     public static final String TYPE_PROPERTY = "TYPE_PROPERTY";
+    public static final String IS_FUNCTION = "IS_FUNCTION";
+    public static final String IS_CLASS = "IS_CLASS";
+    public static final String ALLOW_BREAK = "ALLOW_BREAK";
+    public static final String ALLOW_CONTINUE = "ALLOW_CONTINUE";
 
     private ASTUtils() {
     }
@@ -60,7 +64,7 @@ public class ASTUtils {
         node.setProperty(TYPE_PROPERTY, type);
     }
 
-    public static void error(ASTNode node, String message)throws ASTVisitorException {
+    public static void error(ASTNode node, String message) throws ASTVisitorException {
         throw new ASTVisitorException(node.getLine() + ":" + node.getColumn() + ": " + message);
     }
 

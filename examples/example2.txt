@@ -5,7 +5,7 @@ class Message{
    string text;
    Message next;
 
-  void Message(){
+  void message(){
      this.text = null;
      this.next = null;
    }
@@ -14,7 +14,7 @@ class Message{
 class MessageStore{
   Message first;
 
-  void MessageStore(){
+  void messageStore(){
     this.first = null;
   }
 

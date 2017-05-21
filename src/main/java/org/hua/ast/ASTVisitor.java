@@ -63,4 +63,6 @@ public interface ASTVisitor {
     void visit(ParameterDeclaration node) throws ASTVisitorException;
 
     void visit(PrintStatement node) throws ASTVisitorException;
+
+    void visit(ThisExpression node) throws ASTVisitorException;
 }

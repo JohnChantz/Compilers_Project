@@ -21,6 +21,7 @@ import org.hua.ast.DoWhileStatement;
 import org.hua.ast.DotExpression;
 import org.hua.ast.DotExpressionList;
 import org.hua.ast.DoubleLiteralExpression;
+import org.hua.ast.Expression;
 import org.hua.ast.FieldDefinition;
 import org.hua.ast.FieldOrFunctionDefinition;
 import org.hua.ast.FunctionDefinition;
@@ -37,10 +38,12 @@ import org.hua.ast.PrintStatement;
 import org.hua.ast.ReturnStatement;
 import org.hua.ast.Statement;
 import org.hua.ast.StringLiteralExpression;
+import org.hua.ast.ThisExpression;
 import org.hua.ast.TypeSpecifierStatement;
 import org.hua.ast.UnaryExpression;
 import org.hua.ast.WhileStatement;
 import org.hua.ast.WriteStatement;
+import org.objectweb.asm.Type;
 
 /**
  * Build symbol tables for each node of the AST.
@@ -57,8 +60,63 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     public void visit(CompilationUnit node) throws ASTVisitorException {
         pushEnvironment();
         ASTUtils.setEnv(node, symTable.element());
-        for(Definitions def : node.getDefinitions()){
+        for (Definitions def : node.getDefinitions()) {
             def.accept(this);
+        }
+        popEnvironment();
+    }
+
+    @Override
+    public void visit(Definitions node) throws ASTVisitorException {
+//        ASTUtils.setEnv(node, symTable.element());
+        if (node.getClassDefinition() == null) {
+            node.getFunctionDefinition().accept(this);
+        }
+        if (node.getFunctionDefinition() == null) {
+            node.getClassDefinition().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(FunctionDefinition node) throws ASTVisitorException {
+        pushEnvironment();
+        ASTUtils.setEnv(node, symTable.element());
+        Type type = node.getType();
+        node.setProperty("IS_FUNCTION", type);
+        for (ParameterDeclaration p : node.getParameterList()) {
+            p.accept(this);
+        }
+        node.getIdentifier().accept(this);
+        node.getCompoundStatement().accept(this);
+        popEnvironment();
+    }
+
+    @Override
+    public void visit(FieldOrFunctionDefinition node) throws ASTVisitorException {
+//        ASTUtils.setEnv(node, symTable.element());
+        if (node.getFieldDef() == null) {
+            node.getFunctionDef().accept(this);
+        }
+        if (node.getFunctionDef() == null) {
+            node.getFieldDef().accept(this);
+        }
+    }
+
+    @Override
+    public void visit(FieldDefinition node) throws ASTVisitorException {
+        ASTUtils.setEnv(node, symTable.element());
+        node.getIdentifier().accept(this);
+    }
+
+    @Override
+    public void visit(ClassDefinition node) throws ASTVisitorException {
+        pushEnvironment();
+        ASTUtils.setEnv(node, symTable.element());
+        String id = node.getIdentifier().getIdentifier();
+        node.setProperty("IS_CLASS", id);
+        node.getIdentifier().accept(this);
+        for (FieldOrFunctionDefinition f : node.getFieldOrFunctionDefinitions()) {
+            f.accept(this);
         }
         popEnvironment();
     }
@@ -108,7 +166,7 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     }
 
     @Override
-    public void visit(StringLiteralExpression node) throws ASTVisitorException {        
+    public void visit(StringLiteralExpression node) throws ASTVisitorException {
         //just set the environment
         ASTUtils.setEnv(node, symTable.element());
     }
@@ -135,12 +193,12 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(CompoundStatement node) throws ASTVisitorException {
-        pushEnvironment();
+//        pushEnvironment();
         ASTUtils.setEnv(node, symTable.element());
         for (Statement s : node.getStatements()) {
             s.accept(this);
         }
-        popEnvironment();
+//        popEnvironment();
     }
 
     @Override
@@ -174,6 +232,7 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     public void visit(ReturnStatement node) throws ASTVisitorException {
         //just set the environment
         ASTUtils.setEnv(node, symTable.element());
+        node.getExpr().accept(this);
     }
 
     @Override
@@ -183,50 +242,9 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     }
 
     @Override
-    public void visit(FunctionDefinition node) throws ASTVisitorException {
-        pushEnvironment();
-        ASTUtils.setEnv(node, symTable.element());
-        node.getIdentifier().accept(this);
-        node.getCompoundStatement().accept(this);
-    }
-
-    @Override
-    public void visit(FieldOrFunctionDefinition node) throws ASTVisitorException {
-        if(node.getFieldDef() == null)
-            node.getFunctionDef().accept(this);
-        if(node.getFunctionDef() == null)
-            node.getFieldDef().accept(this);
-    }
-
-    @Override
-    public void visit(FieldDefinition node) throws ASTVisitorException {
-        ASTUtils.setEnv(node, symTable.element());
-        node.getIdentifier().accept(this);
-    }
-
-    @Override
-    public void visit(ClassDefinition node) throws ASTVisitorException {
-        pushEnvironment();
-        ASTUtils.setEnv(node, symTable.element());
-        node.getIdentifier().accept(this);
-        for (FieldOrFunctionDefinition f : node.getFieldOrFunctionDefinitions()) {
-            f.accept(this);
-        }
-    }
-
-    @Override
     public void visit(PlainStatement node) throws ASTVisitorException {
         ASTUtils.setEnv(node, symTable.element());
         node.getExp().accept(this);
-    }
-
-    @Override
-    public void visit(Definitions node) throws ASTVisitorException {
-        ASTUtils.setEnv(node, symTable.element());
-        if(node.getClassDefinition() == null)
-            node.getFunctionDefinition().accept(this);
-        if(node.getFunctionDefinition() == null)
-            node.getClassDefinition().accept(this);
     }
 
     @Override
@@ -252,13 +270,16 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     public void visit(NewExpression node) throws ASTVisitorException {
         ASTUtils.setEnv(node, symTable.element());
         node.getIdentifier().accept(this);
+        for (Expression e : node.getList()) {
+            e.accept(this);
+        }
     }
 
     @Override
     public void visit(DotExpressionList node) throws ASTVisitorException {
         //just set the environment
         ASTUtils.setEnv(node, symTable.element());
-        
+
     }
 
     @Override
@@ -269,11 +290,16 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
 
     private void pushEnvironment() {
         SymTable<SymTableEntry> oldSymTable = symTable.peek();
-        SymTable<SymTableEntry> symTable = new HashSymTable<SymTableEntry>(oldSymTable);
-        this.symTable.push(symTable);
+        SymTable<SymTableEntry> newSymTable = new HashSymTable<SymTableEntry>(oldSymTable);
+        this.symTable.push(newSymTable);
     }
 
     private void popEnvironment() {
         symTable.pop();
+    }
+
+    @Override
+    public void visit(ThisExpression node) throws ASTVisitorException {
+        ASTUtils.setEnv(node, symTable.element());
     }
 }

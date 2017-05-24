@@ -423,7 +423,7 @@ Expr ::= /*empty*/
          :}
        | IDENTIFIER:i LPAREN ExprList:list RPAREN
          {:
-            RESULT = new ConditionExpression(i,list);
+            RESULT = new FunctionCallExpression(i,list);
             RESULT.setLine(ileft);
             RESULT.setColumn(iright);
          :}

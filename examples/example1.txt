@@ -6,9 +6,13 @@ void main(){
     write(i);
     write("\n");
     i=i+1;
+    if(i==10){
+    	continue;
+    }
   }
 
   if(i==100){
     write("Done!\n");
+    continue;
   }
 }

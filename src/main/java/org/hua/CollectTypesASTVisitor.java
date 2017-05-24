@@ -11,6 +11,7 @@ import org.hua.ast.BreakStatement;
 import org.hua.ast.ClassDefinition;
 import org.hua.ast.CompilationUnit;
 import org.hua.ast.CompoundStatement;
+import org.hua.ast.FunctionCallExpression;
 import org.hua.ast.ContinueStatement;
 import org.hua.ast.Definition;
 import org.hua.ast.Definitions;
@@ -18,6 +19,7 @@ import org.hua.ast.DoWhileStatement;
 import org.hua.ast.DotExpression;
 import org.hua.ast.DotExpressionList;
 import org.hua.ast.DoubleLiteralExpression;
+import org.hua.ast.Expression;
 import org.hua.ast.FieldDefinition;
 import org.hua.ast.FieldOrFunctionDefinition;
 import org.hua.ast.FunctionDefinition;
@@ -121,7 +123,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
     public void visit(IdentifierExpression node) throws ASTVisitorException {
         SymTable<SymTableEntry> env = ASTUtils.getSafeEnv(node);
         String id = node.getIdentifier();
-        SymTableEntry symTableEntry = env.lookupOnlyInTop(id);
+        SymTableEntry symTableEntry = env.lookup(id);
         if (symTableEntry == null) {
             ASTUtils.error(node, "Variable " + id + " not defined in scope!");
         } else {
@@ -177,12 +179,19 @@ public class CollectTypesASTVisitor implements ASTVisitor {
     @Override
     public void visit(BreakStatement node) throws ASTVisitorException {
         //set node type = void
+        Boolean b = ASTUtils.allowBreak(node);
+        if (!b) {
+            ASTUtils.error(node, "Break statement outside loop!");
+        }
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(ContinueStatement node) throws ASTVisitorException {
-        //set node type = void
+        Boolean b = ASTUtils.allowContinue(node);
+        if (!b) {
+            ASTUtils.error(node, "Break statement outside loop!");
+        }
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
@@ -331,7 +340,16 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ThisExpression node) throws ASTVisitorException {
+
         ASTUtils.setType(node, Type.VOID_TYPE);
+    }
+
+    @Override
+    public void visit(FunctionCallExpression node) throws ASTVisitorException {
+        node.getIdentifier().accept(this);
+        for (Expression e : node.getExprList()) {
+            e.accept(this);
+        }
     }
 
 }

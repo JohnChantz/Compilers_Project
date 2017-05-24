@@ -44,7 +44,7 @@ public interface ASTVisitor {
 
     void visit(ClassDefinition node) throws ASTVisitorException;
 
-    void visit(PlainStatement node) throws  ASTVisitorException;
+    void visit(PlainStatement node) throws ASTVisitorException;
 
     void visit(DoWhileStatement node) throws ASTVisitorException;
 
@@ -65,4 +65,6 @@ public interface ASTVisitor {
     void visit(PrintStatement node) throws ASTVisitorException;
 
     void visit(ThisExpression node) throws ASTVisitorException;
+
+    void visit(FunctionCallExpression node) throws ASTVisitorException;
 }

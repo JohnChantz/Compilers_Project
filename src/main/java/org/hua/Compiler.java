@@ -51,7 +51,9 @@ public class Compiler {
 
                     // construct types
                     LOGGER.debug("Semantic check");
+                    LOGGER.debug("Symbols collector");
                     compUnit.accept(new CollectSymbolsASTVisitor());
+                    LOGGER.debug("Types collector");
                     compUnit.accept(new CollectTypesASTVisitor());
 
                     // print program

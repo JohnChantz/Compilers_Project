@@ -32,8 +32,8 @@ public class ASTUtils {
         return symTable;
     }
 
-    public static void setEnv(ASTNode node, SymTable<SymTableEntry> env) {
-        node.setProperty(SYMTABLE_PROPERTY, env);
+    public static void setEnv(ASTNode node, SymTable<SymTableEntry> symTable) {
+        node.setProperty(SYMTABLE_PROPERTY, symTable);
     }
 
     public static boolean isBooleanExpression(Expression node) {
@@ -44,8 +44,56 @@ public class ASTUtils {
         return b;
     }
 
+    public static boolean isClass(ClassDefinition node) {
+        Boolean b = (Boolean) node.getProperty("IS_CLASS");
+        if (b == null) {
+            return false;
+        }
+        return b;
+    }
+
+    public static boolean isFunction(FunctionDefinition node) {
+        Boolean b = (Boolean) node.getProperty("IS_FUNCTION");
+        if (b == null) {
+            return false;
+        }
+        return b;
+    }
+
+    public static boolean allowBreak(Statement node) {
+        Boolean b = (Boolean) node.getProperty("ALLOW_BREAK");
+        if (b == null) {
+            return false;
+        }
+        return b;
+    }
+
+    public static boolean allowContinue(Statement node) {
+        Boolean b = (Boolean) node.getProperty("ALLOW_CONTINUE");
+        if (b == null) {
+            return false;
+        }
+        return b;
+    }
+
     public static void setBooleanExpression(Expression node, boolean value) {
         node.setProperty(IS_BOOLEAN_EXPR_PROPERTY, value);
+    }
+
+    public static void setIsClass(ASTNode node, boolean value) {
+        node.setProperty(IS_CLASS, value);
+    }
+
+    public static void setIsFunction(ASTNode node, boolean value) {
+        node.setProperty(IS_FUNCTION, value);
+    }
+
+    public static void setAllowBreak(Statement node, boolean value) {
+        node.setProperty(ALLOW_BREAK, value);
+    }
+
+    public static void setAllowContinue(Statement node, boolean value) {
+        node.setProperty(ALLOW_CONTINUE, value);
     }
 
     public static Type getType(ASTNode node) {

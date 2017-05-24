@@ -2,14 +2,14 @@ package org.hua.ast;
 
 import java.util.ArrayList;
 
-public class ConditionExpression extends Expression{
+public class FunctionCallExpression extends Expression{
 
     private ArrayList<Expression> exprList;
-    private String identifier;
+    private IdentifierExpression identifier;
 
-    public ConditionExpression(String identifier,ArrayList<Expression> exprList) {
+    public FunctionCallExpression(String identifier,ArrayList<Expression> exprList) {
         this.exprList = exprList;
-        this.identifier = identifier;
+        this.identifier = new IdentifierExpression(identifier);
     }
 
     public ArrayList<Expression> getExprList() {
@@ -20,16 +20,16 @@ public class ConditionExpression extends Expression{
         this.exprList = exprList;
     }
 
-    public String getIdentifier() {
+    public IdentifierExpression getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(IdentifierExpression identifier) {
         this.identifier = identifier;
     }
 
     @Override
     public void accept(ASTVisitor visitor) throws ASTVisitorException {
-
+        visitor.visit(this);
     }
 }

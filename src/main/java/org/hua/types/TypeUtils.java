@@ -9,7 +9,6 @@ public class TypeUtils {
     public static final Type STRING_TYPE = Type.getType(String.class);
     public static final Type CLASS_TYPE = Type.getType("Ljava/lang/Class;");
     public static final Type FUNCTION_TYPE = Type.getType("Ljava/lang/Function;");
-
     private TypeUtils() {
     }
 

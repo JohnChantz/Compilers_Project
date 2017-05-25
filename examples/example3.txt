@@ -2,7 +2,6 @@
  *  Sample program 3
  */
  class MathUtils {
-
    number sum(number i) {
      if (i <= 0) {
        return 0;
@@ -12,6 +11,7 @@
  }
 
 void main() {
+
   MathUtils mu;
   mu = new MathUtils();
 

@@ -265,7 +265,7 @@ ParameterDeclaration ::= TypeSpecifier:ts IDENTIFIER:i
 
 TypeSpecifier ::= NUMBER:n
                   {:
-                    RESULT = Type.DOUBLE_TYPE;
+                    RESULT = Type.INT_TYPE;
                   :}
                 | STRING:s
                   {:
@@ -277,7 +277,7 @@ TypeSpecifier ::= NUMBER:n
                   :}
                 | IDENTIFIER:i
                   {:
-                    RESULT = Type.getType(String.class);
+                    RESULT = Type.getType("Lorg/hua/"+i+";");
                   :}
                 ;
 

@@ -78,14 +78,14 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
         Type type = node.getType();
         String id = node.getIdentifier().getIdentifier();
 
-        if (id.equals("write") && type.equals(Type.VOID_TYPE)) {
-            ASTUtils.error(node, "Reserved keyword used as function name!");
-        }
         if (symTable.lookup(id) != null) {
             String message = "The function " + id + " exists!";
             ASTUtils.error(node, message);
         } else {
             symTable.put(id, new SymTableEntry(id, type));
+        }
+        for (ParameterDeclaration p : node.getParameterList()) {
+            p.accept(this);
         }
         node.getCompoundStatement().accept(this);
     }
@@ -105,7 +105,6 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
         SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
         String id = node.getIdentifier().getIdentifier();
         Type type = node.getType();
-
         if (symTable.lookup(id) != null) {
             String message = "Field already exists!";
             ASTUtils.error(node, message);
@@ -229,7 +228,6 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
         SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
         String id = node.getIdentifier().getIdentifier();
         Type type = node.getType();
-
         if (symTable.lookupOnlyInTop(id) != null) {
             String message = "The variable already " + id + " exists!";
             ASTUtils.error(node, message);
@@ -280,9 +278,8 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
         SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
         String id = node.getIdentifier().getIdentifier();
         Type type = node.getType();
-
-        if (symTable.lookup(id) != null) {
-            String message = "Parameter already exists!";
+        if (symTable.lookupOnlyInTop(id) != null) {
+            String message = "Parameter " + id + " already exists!";
             ASTUtils.error(node, message);
         } else {
             symTable.put(id, new SymTableEntry(id, type));

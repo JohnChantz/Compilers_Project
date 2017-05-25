@@ -51,6 +51,8 @@ import org.hua.types.TypeException;
  */
 public class CollectTypesASTVisitor implements ASTVisitor {
 
+    private Type type;
+
     public CollectTypesASTVisitor() {
     }
 
@@ -121,32 +123,37 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(IdentifierExpression node) throws ASTVisitorException {
+        Type type;
         SymTable<SymTableEntry> env = ASTUtils.getSafeEnv(node);
         String id = node.getIdentifier();
+        if (id.equals("")) {
+            ASTUtils.setType(node, Type.VOID_TYPE);
+            return;
+        }
         SymTableEntry symTableEntry = env.lookup(id);
         if (symTableEntry == null) {
             ASTUtils.error(node, "Variable " + id + " not defined in scope!");
         } else {
-            Type type = symTableEntry.getType();
+            type = symTableEntry.getType();
             ASTUtils.setType(node, type);
         }
     }
 
     @Override
     public void visit(IntegerLiteralExpression node) throws ASTVisitorException {
-        //set node type = int
+        //set node nodeType = int
         ASTUtils.setType(node, Type.INT_TYPE);
     }
 
     @Override
     public void visit(DoubleLiteralExpression node) throws ASTVisitorException {
-        //set node type = double
+        //set node nodeType = double
         ASTUtils.setType(node, Type.DOUBLE_TYPE);
     }
 
     @Override
     public void visit(StringLiteralExpression node) throws ASTVisitorException {
-        //set node type = String
+        //set node nodeType = String
         ASTUtils.setType(node, TypeUtils.STRING_TYPE);
     }
 
@@ -178,7 +185,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(BreakStatement node) throws ASTVisitorException {
-        //set node type = void
+        //set node nodeType = void
         Boolean b = ASTUtils.allowBreak(node);
         if (!b) {
             ASTUtils.error(node, "Break statement outside loop!");
@@ -190,7 +197,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
     public void visit(ContinueStatement node) throws ASTVisitorException {
         Boolean b = ASTUtils.allowContinue(node);
         if (!b) {
-            ASTUtils.error(node, "Break statement outside loop!");
+            ASTUtils.error(node, "Continue statement outside loop!");
         }
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
@@ -218,19 +225,23 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ReturnStatement node) throws ASTVisitorException {
-        node.getExpr().accept(this);
-        Type type = ASTUtils.getSafeType(node.getExpr());
-        if (node.getProperty("IS_FUNCTION").equals(type)) {
-            ASTUtils.setType(node, type);
+        Type nodeType;
+        if (node.getExpr() != null) {
+            node.getExpr().accept(this);
+            nodeType = ASTUtils.getSafeType(node.getExpr());
         } else {
-            ASTUtils.error(node, "Return statement with different type!");
+            nodeType = Type.VOID_TYPE;
         }
-
+        Boolean b = TypeUtils.isAssignable(nodeType, this.type);
+        if (b) {
+            ASTUtils.setType(node, nodeType);
+        }else{
+            ASTUtils.error(node, "Return statement type dont match function's return type!");
+        }
     }
 
     @Override
     public void visit(TypeSpecifierStatement node) throws ASTVisitorException {
-        //set node type = void        
         node.getIdentifier().accept(this);
         Type type = node.getType();
         ASTUtils.setType(node, type);
@@ -244,9 +255,14 @@ public class CollectTypesASTVisitor implements ASTVisitor {
         if (symTableEntry == null) {
             ASTUtils.error(node, "Function" + id + " not definied!");
         } else {
-            node.getCompoundStatement().accept(this);
+            for (ParameterDeclaration p : node.getParameterList()) {
+                p.accept(this);
+            }
             Type type = symTableEntry.getType();
+            this.type = type;
+            node.getCompoundStatement().accept(this);
             ASTUtils.setType(node, type);
+            this.type = null;
         }
     }
 
@@ -275,7 +291,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ClassDefinition node) throws ASTVisitorException {
-        //set node type = void        
+        //set node nodeType = void        
         for (FieldOrFunctionDefinition f : node.getFieldOrFunctionDefinitions()) {
             f.accept(this);
         }
@@ -314,7 +330,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(NullExpression node) throws ASTVisitorException {
-        //set node type = void
+        //set node nodeType = void
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
@@ -328,6 +344,9 @@ public class CollectTypesASTVisitor implements ASTVisitor {
     public void visit(DotExpressionList node) throws ASTVisitorException {
         node.getExp().accept(this);
         node.getIdentifier().accept(this);
+        for (Expression e : node.getList()) {
+            e.accept(this);
+        }
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
@@ -340,7 +359,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ThisExpression node) throws ASTVisitorException {
-
+        //set node nodeType = void
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
@@ -350,6 +369,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
         for (Expression e : node.getExprList()) {
             e.accept(this);
         }
+        ASTUtils.setType(node, TypeUtils.FUNCTION_TYPE);
     }
 
 }

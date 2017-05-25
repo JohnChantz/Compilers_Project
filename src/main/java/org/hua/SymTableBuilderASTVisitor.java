@@ -51,7 +51,7 @@ import org.hua.ast.WriteStatement;
 public class SymTableBuilderASTVisitor implements ASTVisitor {
 
     private final Deque<SymTable<SymTableEntry>> symTableArray;
-    private boolean bool = false;
+    private boolean loopFlag = false;       //indicates whether inside a loop
 
     public SymTableBuilderASTVisitor() {
         symTableArray = new ArrayDeque<SymTable<SymTableEntry>>();
@@ -173,19 +173,19 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     @Override
     public void visit(WhileStatement node) throws ASTVisitorException {
         ASTUtils.setEnv(node, symTableArray.element());
-        this.bool = true;
+        this.loopFlag = true;
         node.getExpression().accept(this);
         node.getStatement().accept(this);
-        this.bool = false;
+        this.loopFlag = false;
     }
 
     @Override
     public void visit(DoWhileStatement node) throws ASTVisitorException {
         ASTUtils.setEnv(node, symTableArray.element());
-        this.bool = true;
+        this.loopFlag = true;
         node.getExpression().accept(this);
         node.getStatement().accept(this);
-        this.bool = false;
+        this.loopFlag = false;
     }
 
     @Override
@@ -201,8 +201,8 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     @Override
     public void visit(BreakStatement node) throws ASTVisitorException {
         //just set the environment
-        if (this.bool) {
-            ASTUtils.setAllowBreak(node, bool);
+        if (this.loopFlag) {
+            ASTUtils.setAllowBreak(node, loopFlag);
         }
         ASTUtils.setEnv(node, symTableArray.element());
     }
@@ -210,8 +210,8 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     @Override
     public void visit(ContinueStatement node) throws ASTVisitorException {
         //just set the environment
-        if (this.bool) {
-            ASTUtils.setAllowContinue(node, bool);
+        if (this.loopFlag) {
+            ASTUtils.setAllowContinue(node, loopFlag);
         }
         ASTUtils.setEnv(node, symTableArray.element());
     }
@@ -281,6 +281,11 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     public void visit(DotExpressionList node) throws ASTVisitorException {
         //just set the environment
         ASTUtils.setEnv(node, symTableArray.element());
+        node.getExp().accept(this);
+        node.getIdentifier().accept(this);
+        for(Expression e : node.getList()){
+            e.accept(this);
+        }
 
     }
 

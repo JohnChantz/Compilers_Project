@@ -16,6 +16,7 @@ public class ASTUtils {
     public static final String IS_CLASS = "IS_CLASS";
     public static final String ALLOW_BREAK = "ALLOW_BREAK";
     public static final String ALLOW_CONTINUE = "ALLOW_CONTINUE";
+    private static final String FUNCTION_TYPE = "FUNCTION_TYPE";
 
     private ASTUtils() {
     }
@@ -45,7 +46,7 @@ public class ASTUtils {
     }
 
     public static boolean isClass(ClassDefinition node) {
-        Boolean b = (Boolean) node.getProperty("IS_CLASS");
+        Boolean b = (Boolean) node.getProperty(IS_CLASS);
         if (b == null) {
             return false;
         }
@@ -53,15 +54,20 @@ public class ASTUtils {
     }
 
     public static boolean isFunction(FunctionDefinition node) {
-        Boolean b = (Boolean) node.getProperty("IS_FUNCTION");
+        Boolean b = (Boolean) node.getProperty(IS_FUNCTION);
         if (b == null) {
             return false;
         }
         return b;
     }
+    
+    public static Type getFunctionType(FunctionDefinition node){
+        Type type = (Type) node.getProperty(FUNCTION_TYPE);
+        return type;
+    }
 
     public static boolean allowBreak(Statement node) {
-        Boolean b = (Boolean) node.getProperty("ALLOW_BREAK");
+        Boolean b = (Boolean) node.getProperty(ALLOW_BREAK);
         if (b == null) {
             return false;
         }
@@ -69,7 +75,7 @@ public class ASTUtils {
     }
 
     public static boolean allowContinue(Statement node) {
-        Boolean b = (Boolean) node.getProperty("ALLOW_CONTINUE");
+        Boolean b = (Boolean) node.getProperty(ALLOW_CONTINUE);
         if (b == null) {
             return false;
         }
@@ -86,6 +92,10 @@ public class ASTUtils {
 
     public static void setIsFunction(ASTNode node, boolean value) {
         node.setProperty(IS_FUNCTION, value);
+    }
+    
+    public static void setFunctionType(ASTNode node,Type type){
+        node.setProperty(FUNCTION_TYPE, type);
     }
 
     public static void setAllowBreak(Statement node, boolean value) {

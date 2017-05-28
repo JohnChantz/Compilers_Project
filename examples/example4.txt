@@ -1,9 +1,27 @@
 /*Sample Program 4*/
-void main(){
-  number i;
-  i=0;
-  while(i<100){
-    write("\n");
-    break;
+class Message{
+   string text;
+   Message next;
+
+  void message(){
+     this.text = null;
+     this.next = null;
+   }
+ }
+
+class MessageStore{
+  Message first;
+
+  void messageStore(){
+    this.first = null;
   }
+
+  void append(Message m){
+    m.next = first;
+    first = m;
+  }
+}
+
+void main(){
+	
 }

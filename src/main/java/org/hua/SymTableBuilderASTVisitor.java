@@ -81,10 +81,10 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
     public void visit(FunctionDefinition node) throws ASTVisitorException {
         ASTUtils.setEnv(node, symTableArray.element());
         ASTUtils.setIsFunction(node, true);
+        node.getIdentifier().accept(this);
         for (ParameterDeclaration p : node.getParameterList()) {
             p.accept(this);
         }
-        node.getIdentifier().accept(this);
         node.getCompoundStatement().accept(this);
     }
 
@@ -106,12 +106,14 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ClassDefinition node) throws ASTVisitorException {
+        pushEnvironment();
         ASTUtils.setEnv(node, symTableArray.element());
         ASTUtils.setIsClass(node, true);
         node.getIdentifier().accept(this);
         for (FieldOrFunctionDefinition f : node.getFieldOrFunctionDefinitions()) {
             f.accept(this);
         }
+        popEnvironment();
     }
 
     @Override
@@ -283,7 +285,7 @@ public class SymTableBuilderASTVisitor implements ASTVisitor {
         ASTUtils.setEnv(node, symTableArray.element());
         node.getExp().accept(this);
         node.getIdentifier().accept(this);
-        for(Expression e : node.getList()){
+        for (Expression e : node.getList()) {
             e.accept(this);
         }
 

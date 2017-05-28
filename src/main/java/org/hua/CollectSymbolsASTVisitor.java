@@ -1,5 +1,6 @@
 package org.hua;
 
+import java.util.Map;
 import org.hua.symbol.SymTable;
 import org.hua.symbol.SymTableEntry;
 import org.hua.ast.ASTUtils;
@@ -78,7 +79,7 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
         Type type = node.getType();
         String id = node.getIdentifier().getIdentifier();
 
-        if (symTable.lookup(id) != null) {
+        if (symTable.lookupOnlyInTop(id) != null) {
             String message = "The function " + id + " exists!";
             ASTUtils.error(node, message);
         } else {
@@ -117,8 +118,9 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
     @Override
     public void visit(ClassDefinition node) throws ASTVisitorException {
         SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
-        String id = node.getIdentifier().getIdentifier();
+        Map<String, SymTable<SymTableEntry>> map = Registry.getInstance().getMap();
 
+        String id = node.getIdentifier().getIdentifier();
         if (symTable.lookup(id) != null) {
             ASTUtils.error(node, "Class with name " + id + " already exists!");
         } else {
@@ -126,6 +128,7 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
             for (FieldOrFunctionDefinition f : node.getFieldOrFunctionDefinitions()) {
                 f.accept(this);
             }
+            map.put(id, symTable);
         }
     }
 

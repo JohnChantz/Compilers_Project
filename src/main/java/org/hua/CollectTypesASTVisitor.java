@@ -52,6 +52,9 @@ import org.hua.types.TypeException;
 public class CollectTypesASTVisitor implements ASTVisitor {
 
     private Type type;
+    private Boolean classFlag = false;
+    private Boolean isThis = false;
+    private String className;
 
     public CollectTypesASTVisitor() {
     }
@@ -124,18 +127,19 @@ public class CollectTypesASTVisitor implements ASTVisitor {
     @Override
     public void visit(IdentifierExpression node) throws ASTVisitorException {
         Type type;
-        SymTable<SymTableEntry> env = ASTUtils.getSafeEnv(node);
+        SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
         String id = node.getIdentifier();
         if (id.equals("")) {
             ASTUtils.setType(node, Type.VOID_TYPE);
             return;
         }
-        SymTableEntry symTableEntry = env.lookup(id);
+        SymTableEntry symTableEntry = symTable.lookup(id);
         if (symTableEntry == null) {
             ASTUtils.error(node, "Variable " + id + " not defined in scope!");
         } else {
             type = symTableEntry.getType();
             ASTUtils.setType(node, type);
+            this.className = type.toString();
         }
     }
 
@@ -185,7 +189,6 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(BreakStatement node) throws ASTVisitorException {
-        //set node nodeType = void
         Boolean b = ASTUtils.allowBreak(node);
         if (!b) {
             ASTUtils.error(node, "Break statement outside loop!");
@@ -235,7 +238,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
         Boolean b = TypeUtils.isAssignable(nodeType, this.type);
         if (b) {
             ASTUtils.setType(node, nodeType);
-        }else{
+        } else {
             ASTUtils.error(node, "Return statement type dont match function's return type!");
         }
     }
@@ -280,7 +283,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
     public void visit(FieldDefinition node) throws ASTVisitorException {
         SymTable<SymTableEntry> env = ASTUtils.getSafeEnv(node);
         String id = node.getIdentifier().getIdentifier();
-        SymTableEntry symTableEntry = env.lookup(id);
+        SymTableEntry symTableEntry = env.lookupOnlyInTop(id);
         if (symTableEntry == null) {
             ASTUtils.error(node, "Field" + id + " not definied!");
         } else {
@@ -291,10 +294,12 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ClassDefinition node) throws ASTVisitorException {
-        //set node nodeType = void        
+        this.classFlag = true;
+//        this.className = node.getIdentifier().getIdentifier();
         for (FieldOrFunctionDefinition f : node.getFieldOrFunctionDefinitions()) {
             f.accept(this);
         }
+        this.classFlag = false;
         ASTUtils.setType(node, TypeUtils.CLASS_TYPE);
     }
 
@@ -324,8 +329,19 @@ public class CollectTypesASTVisitor implements ASTVisitor {
     @Override
     public void visit(DotExpression node) throws ASTVisitorException {
         node.getExp().accept(this);
-        node.getIdentifier().accept(this);
-        ASTUtils.setType(node, Type.VOID_TYPE);
+        String id = node.getIdentifier().getIdentifier();
+        if (!this.isThis) {
+            SymTable<SymTableEntry> symTable = Registry.getInstance().lookup(this.className);
+            SymTableEntry e = symTable.lookupOnlyInTop(id);
+            if (e == null) {
+                ASTUtils.error(node, "Field or Function " + id + " does not exist in class!");
+            }
+            ASTUtils.setType(node, e.getType());
+        } else {
+            node.getIdentifier().accept(this);
+            ASTUtils.setType(node, ASTUtils.getSafeType(node.getIdentifier()));
+        }
+        this.isThis = false;
     }
 
     @Override
@@ -336,18 +352,36 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(NewExpression node) throws ASTVisitorException {
-        node.getIdentifier().accept(this);
+        String identifier = node.getIdentifier().getIdentifier();
+        SymTable<SymTableEntry> symTable = Registry.getInstance().lookup(identifier);
+        if (symTable == null) {
+            ASTUtils.error(node, "Class " + identifier + " has not been declared!");
+        }
+        for (Expression e : node.getList()) {
+            e.accept(this);
+        }
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
     public void visit(DotExpressionList node) throws ASTVisitorException {
         node.getExp().accept(this);
-        node.getIdentifier().accept(this);
+        String id = node.getIdentifier().getIdentifier();
+        if (!this.isThis) {
+            SymTable<SymTableEntry> symTable = Registry.getInstance().lookup(this.className);
+            SymTableEntry e = symTable.lookupOnlyInTop(id);
+            if (e == null) {
+                ASTUtils.error(node, "Field or Function " + id + " does not exist in class!");
+            }
+            ASTUtils.setType(node, e.getType());
+        } else {
+            node.getIdentifier().accept(this);
+            ASTUtils.setType(node, ASTUtils.getSafeType(node.getIdentifier()));
+        }
+        this.isThis = false;
         for (Expression e : node.getList()) {
             e.accept(this);
         }
-        ASTUtils.setType(node, Type.VOID_TYPE);
     }
 
     @Override
@@ -359,7 +393,10 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(ThisExpression node) throws ASTVisitorException {
-        //set node nodeType = void
+        if (!this.classFlag) {
+            ASTUtils.error(node, "\'This\' expression not allowed outside of class scope!");
+        }
+        this.isThis = true;
         ASTUtils.setType(node, Type.VOID_TYPE);
     }
 

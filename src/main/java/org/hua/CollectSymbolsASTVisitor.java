@@ -41,6 +41,7 @@ import org.hua.ast.TypeSpecifierStatement;
 import org.hua.ast.UnaryExpression;
 import org.hua.ast.WhileStatement;
 import org.hua.ast.WriteStatement;
+import org.hua.symbol.LocalIndexPool;
 import org.hua.types.TypeUtils;
 import org.objectweb.asm.Type;
 
@@ -104,13 +105,15 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
     @Override
     public void visit(FieldDefinition node) throws ASTVisitorException {
         SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
+        LocalIndexPool pool = ASTUtils.getSafeLocalIndexPool(node);
         String id = node.getIdentifier().getIdentifier();
         Type type = node.getType();
         if (symTable.lookup(id) != null) {
             String message = "Field already exists!";
             ASTUtils.error(node, message);
         } else {
-            symTable.put(id, new SymTableEntry(id, type));
+            int index = pool.getLocalIndex(type);
+            symTable.put(id, new SymTableEntry(id, type, index));
         }
         node.getIdentifier().accept(this);
     }
@@ -229,13 +232,15 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
     @Override
     public void visit(TypeSpecifierStatement node) throws ASTVisitorException {
         SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
+        LocalIndexPool pool = ASTUtils.getSafeLocalIndexPool(node);
         String id = node.getIdentifier().getIdentifier();
         Type type = node.getType();
         if (symTable.lookupOnlyInTop(id) != null) {
             String message = "The variable already " + id + " exists!";
             ASTUtils.error(node, message);
         } else {
-            symTable.put(id, new SymTableEntry(id, type));
+            int index = pool.getLocalIndex(type);
+            symTable.put(id, new SymTableEntry(id, type, index));
         }
     }
 
@@ -279,13 +284,16 @@ public class CollectSymbolsASTVisitor implements ASTVisitor {
     @Override
     public void visit(ParameterDeclaration node) throws ASTVisitorException {
         SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
+        LocalIndexPool pool = ASTUtils.getSafeLocalIndexPool(node);
+
         String id = node.getIdentifier().getIdentifier();
         Type type = node.getType();
         if (symTable.lookupOnlyInTop(id) != null) {
             String message = "Parameter " + id + " already exists!";
             ASTUtils.error(node, message);
         } else {
-            symTable.put(id, new SymTableEntry(id, type));
+            int index = pool.getLocalIndex(type);
+            symTable.put(id, new SymTableEntry(id, type,index));
         }
         node.getIdentifier().accept(this);
     }

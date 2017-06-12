@@ -4,8 +4,14 @@
  */
 package org.hua;
 
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import org.hua.ast.ASTNode;
 import org.hua.ast.ASTVisitor;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.util.TraceClassVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,14 +52,14 @@ public class Compiler {
                     Registry.getInstance().setRoot(compUnit);
 
                     // build symbol table
-                    LOGGER.debug("Building system table");
+                    LOGGER.debug("Building symbol table");
                     compUnit.accept(new SymTableBuilderASTVisitor());
+                    LOGGER.debug("Building local variables index");
+                    compUnit.accept(new LocalIndexBuilderASTVisitor());
 
                     // construct types
                     LOGGER.debug("Semantic check");
-                    LOGGER.debug("Symbols collector");
                     compUnit.accept(new CollectSymbolsASTVisitor());
-                    LOGGER.debug("Types collector");
                     compUnit.accept(new CollectTypesASTVisitor());
 
                     // print program
@@ -61,7 +67,37 @@ public class Compiler {
                     ASTVisitor printVisitor = new PrintASTVisitor();
                     compUnit.accept(printVisitor);
 
+                    // convert to java bytecode
+                    LOGGER.info("Bytecode:");
+                    BytecodeGeneratorASTVisitor bytecodeVisitor = new BytecodeGeneratorASTVisitor();
+                    compUnit.accept(bytecodeVisitor);
+                    ClassNode cn = bytecodeVisitor.getClassNode();
+                    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS + ClassWriter.COMPUTE_FRAMES);
+                    TraceClassVisitor cv = new TraceClassVisitor(cw, new PrintWriter(System.out));
+                    cn.accept(cv);
+                    // get code
+                    byte code[] = cw.toByteArray();
+
+                    // update to file
+                    LOGGER.info("Writing class to file Calculator.class");
+                    FileOutputStream fos = new FileOutputStream("Calculator.class");
+                    fos.write(code);
+                    fos.close();
                     LOGGER.info("Compilation done");
+
+                    // instantiate class
+                    LOGGER.info("Loading class Calculator.class");
+                    ReloadingClassLoader rcl = new ReloadingClassLoader(ClassLoader.getSystemClassLoader());
+                    rcl.register("Calculator", code);
+                    Class<?> calculatorClass = rcl.loadClass("Calculator");
+
+                    // run main method
+                    Method meth = calculatorClass.getMethod("main", String[].class);
+                    String[] params = null;
+                    LOGGER.info("Executing");
+                    meth.invoke(null, (Object) params);
+
+                    LOGGER.info("Finished execution");
                 } catch (java.io.FileNotFoundException e) {
                     LOGGER.error("File not found : \"" + args[i] + "\"");
                 } catch (java.io.IOException e) {
@@ -69,7 +105,7 @@ public class Compiler {
                     LOGGER.error(e.toString());
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage());
-                    //e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }

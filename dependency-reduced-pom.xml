@@ -4,7 +4,7 @@
   <groupId>org.hua</groupId>
   <artifactId>compiler</artifactId>
   <name>compiler</name>
-  <version>0.0.5</version>
+  <version>0.0.7</version>
   <url>http://www.dit.hua.gr</url>
   <build>
     <resources>

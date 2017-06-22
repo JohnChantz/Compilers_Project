@@ -277,7 +277,7 @@ TypeSpecifier ::= NUMBER:n
                   :}
                 | IDENTIFIER:i
                   {:
-                    RESULT = Type.getType(i);
+                    RESULT = Type.getType("Lorg/hua/" + i + ";");
                   :}
                 ;
 

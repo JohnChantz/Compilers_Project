@@ -1,17 +1,9 @@
 /*Sample Program 1*/
-void main(){
-  number i;
-  i=0;
-  while(i<100){
-    write(i);
-    write("\n");
-    i=i+1;
-    if(i==10){
-    	break;
-    }
-  }
+number sum(number x,number y){
+  return x+y;
+}
 
-  if(i==100){
-    write("Done!\n");
-  }
+void main(){
+  sum(1,2);
+  write("foo");
 }

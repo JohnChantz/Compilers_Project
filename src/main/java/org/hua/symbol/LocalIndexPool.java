@@ -34,7 +34,8 @@ public class LocalIndexPool {
         } else if (type.equals(Type.INT_TYPE) || type.equals(TypeUtils.STRING_TYPE)) {
             return getLocalIndex();
         } else {
-            throw new IllegalArgumentException("Not supported type " + type);
+            return getLocalIndex();
+//            throw new IllegalArgumentException("Not supported type " + type);
         }
     }
 

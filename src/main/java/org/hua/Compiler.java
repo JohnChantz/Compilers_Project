@@ -79,17 +79,17 @@ public class Compiler {
                     byte code[] = cw.toByteArray();
 
                     // update to file
-                    LOGGER.info("Writing class to file Calculator.class");
-                    FileOutputStream fos = new FileOutputStream("Calculator.class");
+                    LOGGER.info("Writing class to Class File");
+                    FileOutputStream fos = new FileOutputStream("MegaClass.class");
                     fos.write(code);
                     fos.close();
                     LOGGER.info("Compilation done");
 
                     // instantiate class
-                    LOGGER.info("Loading class Calculator.class");
+                    LOGGER.info("Loading class Message.class");
                     ReloadingClassLoader rcl = new ReloadingClassLoader(ClassLoader.getSystemClassLoader());
-                    rcl.register("Calculator", code);
-                    Class<?> calculatorClass = rcl.loadClass("Calculator");
+                    rcl.register("MegaClass", code);
+                    Class<?> calculatorClass = rcl.loadClass("MegaClass");
 
                     // run main method
                     Method meth = calculatorClass.getMethod("main", String[].class);

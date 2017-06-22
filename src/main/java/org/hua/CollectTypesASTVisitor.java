@@ -54,6 +54,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
     private Type type;
     private Boolean classFlag = false;
     private Boolean isThis = false;
+    private Boolean isDot = false;
     private String className;
 
     public CollectTypesASTVisitor() {
@@ -140,6 +141,13 @@ public class CollectTypesASTVisitor implements ASTVisitor {
             type = symTableEntry.getType();
             ASTUtils.setType(node, type);
             this.className = type.toString();
+            int i = className.lastIndexOf('/');
+            if (i != -1) {
+                className = className.substring(i+1, className.length() - 1);
+            }
+            if (this.isDot) {
+                ASTUtils.setClassBelongsName(node, className);
+            }
         }
     }
 
@@ -255,6 +263,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
         SymTable<SymTableEntry> env = ASTUtils.getSafeEnv(node);
         String id = node.getIdentifier().getIdentifier();
         SymTableEntry symTableEntry = env.lookup(id);
+
         if (symTableEntry == null) {
             ASTUtils.error(node, "Function" + id + " not definied!");
         } else {
@@ -295,7 +304,6 @@ public class CollectTypesASTVisitor implements ASTVisitor {
     @Override
     public void visit(ClassDefinition node) throws ASTVisitorException {
         this.classFlag = true;
-//        this.className = node.getIdentifier().getIdentifier();
         for (FieldOrFunctionDefinition f : node.getFieldOrFunctionDefinitions()) {
             f.accept(this);
         }
@@ -328,6 +336,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(DotExpression node) throws ASTVisitorException {
+        this.isDot = true;
         node.getExp().accept(this);
         String id = node.getIdentifier().getIdentifier();
         if (!this.isThis) {
@@ -342,6 +351,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
             ASTUtils.setType(node, ASTUtils.getSafeType(node.getIdentifier()));
         }
         this.isThis = false;
+        this.isDot = true;
     }
 
     @Override
@@ -365,6 +375,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(DotExpressionList node) throws ASTVisitorException {
+        this.isDot = true;
         node.getExp().accept(this);
         String id = node.getIdentifier().getIdentifier();
         if (!this.isThis) {
@@ -382,6 +393,7 @@ public class CollectTypesASTVisitor implements ASTVisitor {
         for (Expression e : node.getList()) {
             e.accept(this);
         }
+        this.isDot = false;
     }
 
     @Override
@@ -402,11 +414,14 @@ public class CollectTypesASTVisitor implements ASTVisitor {
 
     @Override
     public void visit(FunctionCallExpression node) throws ASTVisitorException {
+        SymTable<SymTableEntry> symTable = ASTUtils.getSafeEnv(node);
         node.getIdentifier().accept(this);
+        String id = node.getIdentifier().getIdentifier();
         for (Expression e : node.getExprList()) {
             e.accept(this);
         }
-        ASTUtils.setType(node, TypeUtils.FUNCTION_TYPE);
+        SymTableEntry e = symTable.lookup(id);
+        ASTUtils.setType(node, e.getType());
     }
 
 }

@@ -4,24 +4,9 @@ class Message{
    Message next;
 
   void message(){
-     this.text = null;
-     this.next = null;
+     this.text = "text";
    }
  }
 
-class MessageStore{
-  Message first;
-
-  void messageStore(){
-    this.first = null;
-  }
-
-  void append(Message m){
-    m.next = first;
-    first = m;
-  }
-}
-
 void main(){
-	
 }

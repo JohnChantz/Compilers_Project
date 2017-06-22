@@ -29,6 +29,7 @@ public class ASTUtils {
     public static final String ALLOW_BREAK = "ALLOW_BREAK";
     public static final String ALLOW_CONTINUE = "ALLOW_CONTINUE";
     private static final String FUNCTION_TYPE = "FUNCTION_TYPE";
+    private static final String CLASS_BELONGS_NAME = "CLASS_BELONGS_NAME";
 
     private ASTUtils() {
     }
@@ -167,8 +168,7 @@ public class ASTUtils {
 
     public static void error(ASTNode node, String message)
             throws ASTVisitorException {
-        throw new ASTVisitorException(node.getLine() + ":" + node.getColumn()
-                + ": " + message);
+        throw new ASTVisitorException(node.getLine() + ":" + node.getColumn() + ": " + message);
     }
 
     public static boolean isClass(ClassDefinition node) {
@@ -190,6 +190,11 @@ public class ASTUtils {
     public static Type getFunctionType(FunctionDefinition node) {
         Type type = (Type) node.getProperty(FUNCTION_TYPE);
         return type;
+    }
+
+    public static String getClassBelongsName(Expression node) {
+        String name = (String) node.getProperty(CLASS_BELONGS_NAME);
+        return name;
     }
 
     public static boolean allowBreak(Statement node) {
@@ -226,6 +231,10 @@ public class ASTUtils {
 
     public static void setAllowContinue(Statement node, boolean value) {
         node.setProperty(ALLOW_CONTINUE, value);
+    }
+
+    public static void setClassBelongsName(Expression node, String name) {
+        node.setProperty(CLASS_BELONGS_NAME, name);
     }
 
 }
